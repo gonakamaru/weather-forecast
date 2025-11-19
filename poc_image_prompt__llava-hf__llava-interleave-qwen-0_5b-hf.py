@@ -1,32 +1,19 @@
-from transformers import AutoProcessor, AutoModelForVision2Seq
+from transformers import AutoProcessor, AutoModelForImageTextToText
 from PIL import Image
 import torch
 
 MODEL_NAME = "llava-hf/llava-interleave-qwen-0.5b-hf"
-proc = AutoProcessor.from_pretrained(MODEL_NAME, use_fast=True)
-model = AutoModelForVision2Seq.from_pretrained(MODEL_NAME)
 
-# Load sample image
+processor = AutoProcessor.from_pretrained(MODEL_NAME, use_fast=True)
+model = AutoModelForImageTextToText.from_pretrained(MODEL_NAME)
+
 img = Image.open("sample.png").convert("RGB")
+prompt = "Describe.\n <image>"
 
-# Prompt describing what you want
-prompt = "Find Japan in this map. <image>"
+inputs = processor(text=prompt, images=img, return_tensors="pt")
 
-# Process image and prompt together
-inputs = proc(img, prompt, return_tensors="pt")
+with torch.no_grad():
+    out = model.generate(**inputs, max_new_tokens=150)
 
-# Generate forecast
-out = model.generate(
-    **inputs,
-    max_new_tokens=400,
-    do_sample=True,
-    top_p=0.9,
-    temperature=0.7,
-    pad_token_id=proc.tokenizer.eos_token_id
-)
-
-# Decode result
-text_output = proc.decode(out[0], skip_special_tokens=True)
-
-print("=== Forecast ===")
+text_output = processor.decode(out[0], skip_special_tokens=True)
 print(text_output)
