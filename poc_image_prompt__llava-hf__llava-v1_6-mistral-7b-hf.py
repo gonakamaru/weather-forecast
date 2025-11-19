@@ -24,11 +24,7 @@ prompt = "<image>\nUSER: Provide a short weather summary for Japan.\nASSISTANT:"
 
 # Process input
 print("=== PROCESS INPUT ===")
-inputs = processor(
-    text=prompt,
-    images=img,
-    return_tensors="pt"
-)
+inputs = processor(text=prompt, images=img, return_tensors="pt")
 
 # Generate output
 print("=== GENERATE OUTPUT ===")

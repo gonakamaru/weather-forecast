@@ -10,9 +10,7 @@ model = AutoModelForVision2Seq.from_pretrained(MODEL_NAME)
 img = Image.open("sample.png").convert("RGB")
 
 # Prompt describing what you want
-prompt = (
-    "Find Japan in this map. <image>"
-)
+prompt = "Find Japan in this map. <image>"
 
 # Process image and prompt together
 inputs = proc(img, prompt, return_tensors="pt")
