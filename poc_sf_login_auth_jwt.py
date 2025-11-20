@@ -1,80 +1,77 @@
-#!/usr/bin/env python3
 """
-Salesforce JWT Bearer Flow Authentication
+Salesforce OAuth2 (JWT Bearer) Login — No Browser, No Redirect
+
+Flow:
+1. Build a signed JWT assertion using your private key.
+2. Send it to Salesforce's /token endpoint with grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer
+3. Receive access token.
+4. Connect via simple_salesforce.
 
 Requires:
-- Enable JWT Bearer Flow in Connected App settings
-- Create RSA key pair, upload public key to Connected App
+- Connected App with certificate uploaded.
+- User approved for the Connected App.
 """
 
 import os
 import time
-import jwt
+import json
+import base64
+import jwt  # PyJWT
 import requests
+from simple_salesforce import Salesforce
 from dotenv import load_dotenv
 
-# Load env variables
 load_dotenv()
 
-SF_CLIENT_ID = os.getenv("SF_CLIENT_ID")  # Connected App Consumer Key
-SF_USERNAME = os.getenv("SF_USERNAME")  # Salesforce username
-JWT_KEY_PATH = os.getenv("SF_JWT_PRIVATE_KEY")  # Path to private key file
-SF_LOGIN_URL = "https://login.salesforce.com/services/oauth2/token"
+CLIENT_ID = os.getenv("SF_CLIENT_ID")
+USERNAME = os.getenv("SF_USERNAME")  # The user to impersonate
+AUDIENCE = os.getenv("SF_AUDIENCE", "https://login.salesforce.com")
+PRIVATE_KEY_PATH = os.getenv("SF_PRIVATE_KEY_PATH")
+
+# --------------------------------------------------
+# Load private key
+# --------------------------------------------------
+with open(PRIVATE_KEY_PATH, "rb") as f:
+    PRIVATE_KEY = f.read()
 
 
-def build_jwt_assertion():
-    # Create JWT assertion signed with RSA private key.
-    with open(JWT_KEY_PATH, "r") as f:
-        private_key = f.read()
-
+# --------------------------------------------------
+# Create JWT assertion
+# --------------------------------------------------
+def create_jwt_assertion():
     now = int(time.time())
-    exp = now + 300  # 5 minutes (JWT max recommended)
-
+    exp = now + 300  # 5 minutes
     payload = {
-        "iss": SF_CLIENT_ID,  # client_id
-        "sub": SF_USERNAME,  # username
-        "aud": "https://login.salesforce.com",  # audience
+        "iss": CLIENT_ID,
+        "sub": USERNAME,
+        "aud": AUDIENCE,
         "exp": exp,
     }
-
-    assertion = jwt.encode(payload, private_key, algorithm="RS256")
-
+    assertion = jwt.encode(payload, PRIVATE_KEY, algorithm="RS256")
     return assertion
 
 
-def get_access_token(assertion):
-    # Exchange the JWT assertion for an access token.
+jwt_assertion = create_jwt_assertion()
 
-    data = {
-        "grant_type": "urn:ietf:params:oauth:grant-type:jwt-bearer",
-        "assertion": assertion,
-    }
+# --------------------------------------------------
+# Exchange JWT for Access Token
+# --------------------------------------------------
+TOKEN_URL = f"{AUDIENCE}/services/oauth2/token"
 
-    response = requests.post(SF_LOGIN_URL, data=data)
+payload = {
+    "grant_type": "urn:ietf:params:oauth:grant-type:jwt-bearer",
+    "assertion": jwt_assertion,
+}
 
-    if response.status_code != 200:
-        raise RuntimeError(f"JWT auth failed: {response.text}")
+response = requests.post(TOKEN_URL, data=payload)
+response.raise_for_status()
 
-    token_data = response.json()
-    return token_data["access_token"], token_data["instance_url"]
+tokens = response.json()
+access_token = tokens["access_token"]
+instance_url = tokens["instance_url"]
 
-
-print("Authenticating with Salesforce using JWT...")
-
-assertion = build_jwt_assertion()
-access_token, instance_url = get_access_token(assertion)
-
-print("Access Token: " f"{access_token[:10]}...{access_token[-10:]}")
-print("Instance URL:", instance_url)
-
-# describe Lead object
-r = requests.get(
-    f"{instance_url}/services/data/v59.0/sobjects/Lead/describe",
-    headers={"Authorization": f"Bearer {access_token}"},
-)
-
-print("Lead Describe Status:", r.status_code)
-print(r.json())
+print("\nAccess Token:", f"{access_token[:12]}...{access_token[-12:]}")
+print("Instance:", instance_url)
 
 # --------------------------------------------------
 # Connect via simple_salesforce
@@ -85,4 +82,3 @@ sf = Salesforce(
 )
 
 print("\nConnected as:", sf.sf_instance)
-# print("Lead fields:", sf.Lead.describe())  # Very long output
