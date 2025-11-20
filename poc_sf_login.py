@@ -41,10 +41,11 @@ def generate_pkce():
     verifier = base64.urlsafe_b64encode(secrets.token_bytes(40)).rstrip(b"=").decode()
     digest = hashlib.sha256(verifier.encode()).digest()
     challenge = base64.urlsafe_b64encode(digest).rstrip(b"=").decode()
-    return verifier, challenge
+    method = "S256"
+    return verifier, challenge, method
 
 
-code_verifier, code_challenge = generate_pkce()
+code_verifier, code_challenge, code_challenge_method = generate_pkce()
 
 # --------------------------------------------------
 # OAuth URL
@@ -55,7 +56,7 @@ O_AUTH_URL = (
     f"&client_id={CLIENT_ID}"
     f"&redirect_uri={REDIRECT_URI}"
     f"&code_challenge={code_challenge}"
-    f"&code_challenge_method=S256"
+    f"&code_challenge_method={code_challenge_method}"
 )
 
 auth_code = None
@@ -72,7 +73,7 @@ class OAuthHandler(BaseHTTPRequestHandler):
         if self.requestline.startswith("CONNECT") or self.raw_requestline.startswith(
             b"\x16\x03"
         ):
-            # Ignore and do nothing
+            print("Received HTTPS request on HTTP server; ignoring.")
             return
 
         parsed = urlparse(self.path)
@@ -86,7 +87,7 @@ class OAuthHandler(BaseHTTPRequestHandler):
 
 
 # --------------------------------------------------
-# Server Runner – one request only
+# Server Runner receiving one request only
 # --------------------------------------------------
 def localhost_wait_for_code():
     with HTTPServer(("127.0.0.1", PORT), OAuthHandler) as httpd:
@@ -111,7 +112,6 @@ if not auth_code:
     raise RuntimeError(
         "No authorization code received. Browser likely sent HTTPS instead of HTTP."
     )
-
 
 print("Authorization Code: " f"{auth_code[:10]}...{auth_code[-10:]}")
 
