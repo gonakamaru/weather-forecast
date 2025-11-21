@@ -8,7 +8,6 @@
 # ==========================================
 
 import argparse
-import sys
 
 
 def main(argv=None):
@@ -16,15 +15,13 @@ def main(argv=None):
     parser.add_argument(
         "--run",
         action="store_true",
-        required=True,
-        help="must have for every execution preventing accidental execution.",
+        help="Must have for every execution; prevents accidental execution.",
     )
     parser.add_argument(
         "--force",
-        default=False,
         action="store_true",
-        required=False,
-        help="force execution w/o checking the same PDF. good for demo and debug.",
+        default=False,
+        help="Force execution without checking the same PDF; good for demo and debug.",
     )
 
     args = parser.parse_args(argv)
@@ -32,7 +29,11 @@ def main(argv=None):
     print(args.run)
     print(args.force)
 
+    if not args.run:
+        parser.error("Missing --run. This flag is required to execute the program.")
+
     if args.force:
+        # Placeholder for force execution logic
         pass
 
 
