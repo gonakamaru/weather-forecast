@@ -11,11 +11,15 @@ load_dotenv()
 
 SF_CLIENT_ID = os.getenv("SF_CLIENT_ID")
 SF_USERNAME = os.getenv("SF_USERNAME")
-SF_LOGIN_URL = os.getenv("SF_LOGIN_URL")
+SF_LOGIN_URL = os.getenv("SF_LOGIN_URL", "https://login.salesforce.com")
 SF_PRIVATE_KEY_FILE = os.getenv("SF_PRIVATE_KEY_FILE", "./server.key")
 
 
 def get_jwt_assertion():
+    """
+    Creates a JWT assertion signed with the private key.
+    Returns the JWT as a string.
+    """
     with open(SF_PRIVATE_KEY_FILE, "rb") as f:
         private_key = f.read()
 
@@ -30,6 +34,10 @@ def get_jwt_assertion():
 
 
 def get_token_and_instance(jwt_assertion):
+    """
+    Exchanges JWT assertion for access token and instance URL.
+    Returns (access_token, instance_url).
+    """
     token_url = f"{SF_LOGIN_URL}/services/oauth2/token"
 
     data = {
@@ -45,6 +53,10 @@ def get_token_and_instance(jwt_assertion):
 
 
 def create_weather_report(sf):
+    """
+    Creates a Weather_Report__c record.
+    Returns Weather_Report__c ID.
+    """
     # Example: create a UTC timestamp in ISO8601
     ts = datetime.now(timezone.utc).isoformat()  # "2025-11-21T00:30:12.123456+00:00"
     # Salesforce wants “Z”, not “+00:00”
@@ -56,10 +68,19 @@ def create_weather_report(sf):
         "Import_Timestamp__c": ts,
     }
 
-    return sf.Weather_Report__c.create(body)
+    return sf.Weather_Report__c.create(body)["id"]
 
 
-def upload_content(sf, file_path, record_id):
+def upload_weather_chart(sf, file_path, record_id):
+    """
+    Uploads a file as ContentVersion and links it to the given record.
+    Returns ContentVersion ID.
+    """
+    if not os.path.exists(file_path):
+        return None
+
+    basename = os.path.basename(file_path)
+
     with open(file_path, "rb") as f:
         blob = f.read()
 
@@ -67,40 +88,31 @@ def upload_content(sf, file_path, record_id):
 
     body = {
         "Title": "Weather Chart",
-        "PathOnClient": os.path.basename(file_path),
+        "PathOnClient": basename,
         "VersionData": b64,
         "FirstPublishLocationId": record_id,
     }
 
-    return sf.ContentVersion.create(body)
+    return sf.ContentVersion.create(body)["id"]
 
 
-def main():
-    FILE_PATH = "sample_small.png"
+FILE_PATH = "sample_small.png"
 
-    if not os.path.exists(FILE_PATH):
-        print(f"{FILE_PATH} not found and aborting.")
-        return
+if not os.path.exists(FILE_PATH):
+    print(f"{FILE_PATH} not found and aborting.")
+    sys.exit(1)
 
-    assertion = get_jwt_assertion()
-    print(f"   JWT assertion: {assertion[:10]}...{assertion[-10:]}")
+assertion = get_jwt_assertion()
+print(f"   JWT assertion: {assertion[:10]}...{assertion[-10:]}")
 
-    token, instance = get_token_and_instance(assertion)
-    print(f"   token: {token[:10]}...{token[-10:]}")
-    print(f"   instance: {instance}")
+token, instance = get_token_and_instance(assertion)
+print(f"   token: {token[:10]}...{token[-10:]}")
+print(f"   instance: {instance}")
 
-    sf = Salesforce(instance_url=instance, session_id=token)
+sf = Salesforce(instance_url=instance, session_id=token)
 
-    wr = create_weather_report(sf)
-    wr_record_id = wr["id"]
-    print(f"   Weather Report: {wr_record_id}")
+wr_record_id = create_weather_report(sf)
+print(f"   Weather Report ID: {wr_record_id}")
 
-    cv = upload_content(sf, FILE_PATH, wr_record_id)
-    cv_record_id = cv["id"]
-    print(f"   Content Version: {cv_record_id}")
-
-    print("✨ Done.")
-
-
-if __name__ == "__main__":
-    main()
+cv_record_id = upload_weather_chart(sf, FILE_PATH, wr_record_id)
+print(f"   Content Version ID: {cv_record_id}")
