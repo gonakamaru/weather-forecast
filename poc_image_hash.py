@@ -2,10 +2,19 @@ import hashlib
 
 
 def pdf_hash(path):
+    """
+    Calculate a SHA-256 hash of a PDF file.
+    - Reads the file in small chunks (8 KB) so it works with large PDFs
+      without loading the whole file into memory.
+    - Returns a 64-character hex string fingerprint.
+    """
     sha = hashlib.sha256()
+    CHUNK_SIZE = 8192  # 8 KB per read
+
     with open(path, "rb") as f:
-        while chunk := f.read(8192):
+        while chunk := f.read(CHUNK_SIZE):
             sha.update(chunk)
+
     return sha.hexdigest()
 
 
