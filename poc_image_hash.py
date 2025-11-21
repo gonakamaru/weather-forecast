@@ -12,6 +12,10 @@ def pdf_hash(path):
 hash_yesterday = pdf_hash("chart_yesterday.pdf")
 hash_today = pdf_hash("chart_today.pdf")
 
+print(f"yesterday: {hash_yesterday}")
+print(f"today____: {hash_today}")
+print(f"length: {len(hash_today)}")
+
 if hash_yesterday == hash_today:
     print("No update")
 else:
