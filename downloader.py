@@ -53,9 +53,9 @@ class WeatherPDFDownloader:
     def _delete(self, path: Path) -> None:
         """Delete the file if it exists."""
         if path.exists():
-            path.unlink()
+            path.unlink()  # remove the file
 
-    def _download(self):
+    def _download(self) -> None:
         """Download the current PDF from the URL."""
         data = urllib.request.urlopen(self.weather_pdf_url).read()
         with self.current_pdf_path.open("wb") as f:
@@ -65,7 +65,7 @@ class WeatherPDFDownloader:
         if src.exists():
             src.rename(dst)
 
-    def _compare_and_cleanup(self) -> str:
+    def _compare_and_cleanup(self) -> bool:
         """Compare current and last PDFs by hash. Clean up if unchanged."""
         last_hash = WeatherPDFDownloader.hash_pdf(self.last_pdf_path)
         current_hash = WeatherPDFDownloader.hash_pdf(self.current_pdf_path)

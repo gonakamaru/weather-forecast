@@ -20,6 +20,7 @@ class DummyDL(WeatherPDFDownloader):
 
 def test_case_A(tmp_path):
     """Case A: neither exists"""
+    # tmp_path is a pytest fixture providing a temporary directory
     dl = DummyDL(tmp_path, [b"PDF-A"])
 
     changed = dl.update()
@@ -31,6 +32,7 @@ def test_case_A(tmp_path):
 
 def test_case_B(tmp_path):
     """Case B: only current exists"""
+    # tmp_path is a pytest fixture providing a temporary directory
     current_pdf_path = tmp_path / "current.pdf"
     current_pdf_path.write_bytes(b"OLD")
 
