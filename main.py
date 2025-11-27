@@ -6,25 +6,18 @@
 # Enjoy coding! 🛸
 # ==========================================
 from cli import parse_args
+from downloader import WeatherPDFDownloader
 
 
-def main(argv=None):
-    args = parse_args(argv)
+def main():
+    args = parse_args()
 
-    print(f"run: {args.run}")
-    print(f"force: {args.force}")
-    print(f"dryrun: {args.dryrun}")
+    manager = WeatherPDFDownloader(
+        data_dir="./data", weather_pdf_url="https://weather.example.com/latest.pdf"
+    )
 
-    if not args.run:
-        raise SystemExit("Error: Missing --run. This flag is required.")
-
-    if args.force:
-        # Placeholder for force execution logic
-        pass
-
-    if args.dryrun:
-        # Placeholder for dryrun logic
-        pass
+    result = manager.update()
+    print(result)
 
 
 if __name__ == "__main__":
