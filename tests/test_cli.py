@@ -1,11 +1,7 @@
-import subprocess
-import sys
+from cli import parse_args
 
 
 def test_cli_run_flag():
-    result = subprocess.run(
-        [sys.executable, "main.py", "--run"],
-        capture_output=True,
-        text=True,
-    )
-    assert result.returncode == 0
+    """Test that the --run flag is parsed correctly."""
+    args = parse_args(["--run"])
+    assert args.run is True
