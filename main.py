@@ -14,12 +14,20 @@ WEATHER_PDF_URL = "https://www.data.jma.go.jp/yoho/data/wxchart/quick/ASAS_COLOR
 def main():
     args = parse_args()
 
-    manager = WeatherPDFDownloader(
-        data_dir="./data", weather_pdf_url="https://weather.example.com/latest.pdf"
-    )
+    print(f"run: {args.run}")
+    print(f"force: {args.force}")
+    print(f"dryrun: {args.dryrun}")
 
-    result = manager.update()
-    print(result)
+    if not args.run:
+        raise SystemExit("Error: Missing --run. This flag is required.")
+
+    if args.force:
+        # Placeholder for force execution logic
+        pass
+
+    if args.dryrun:
+        # Placeholder for dryrun logic
+        pass
 
     manager = WeatherPDFDownloader(
         data_dir="./data",

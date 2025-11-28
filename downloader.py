@@ -62,6 +62,7 @@ class WeatherPDFDownloader:
             f.write(data)
 
     def _rename(self, src: Path, dst: Path) -> None:
+        """Rename (move) a file from src to dst."""
         if src.exists():
             src.rename(dst)
 
