@@ -6,16 +6,16 @@ from downloader import WeatherPDFDownloader
 class DummyDL(WeatherPDFDownloader):
     """Extending a class and override methods for testing."""
 
-    def __init__(self, data_dir, content):
+    def __init__(self, data_dir, contents):
         super().__init__(data_dir, weather_pdf_url="dummy")
-        self.fake_content = content
+        self.fake_contents = contents
         self.calls = 0
 
     def _download(self):
         """Simulate downloading by writing predefined content."""
         self.calls += 1
         with self.current_pdf_path.open("wb") as f:
-            f.write(self.fake_content[self.calls - 1])
+            f.write(self.fake_contents[self.calls - 1])
 
 
 def test_case_A(tmp_path):
@@ -33,26 +33,69 @@ def test_case_A(tmp_path):
 def test_case_B(tmp_path):
     """Case B: only current exists"""
     # tmp_path is a pytest fixture providing a temporary directory
-    current_pdf_path = tmp_path / "current.pdf"
+    current_pdf_path = tmp_path / WeatherPDFDownloader.CURRENT_PDF
     current_pdf_path.write_bytes(b"OLD")
 
     dl = DummyDL(tmp_path, [b"NEW"])
     changed = dl.update()
 
     # After rename: last.pdf=OLD, current.pdf=NEW
-    assert (tmp_path / "last.pdf").read_bytes() == b"OLD"
-    assert (tmp_path / "current.pdf").read_bytes() == b"NEW"
+    assert (tmp_path / WeatherPDFDownloader.LAST_PDF).read_bytes() == b"OLD"
+    assert (tmp_path / WeatherPDFDownloader.CURRENT_PDF).read_bytes() == b"NEW"
     assert changed is True
 
 
 def test_case_C_no_change(tmp_path):
-    """Case C: only last exists"""
-    last = tmp_path / "last.pdf"
+    """Case C: only last exists. New download is the same as last."""
+    last = tmp_path / WeatherPDFDownloader.LAST_PDF
     last.write_bytes(b"SAME")
 
     dl = DummyDL(tmp_path, [b"SAME"])
     changed = dl.update()
 
     assert changed is False
-    assert (tmp_path / "last.pdf").read_bytes() == b"SAME"
-    assert not (tmp_path / "current.pdf").exists()
+    assert (tmp_path / WeatherPDFDownloader.LAST_PDF).read_bytes() == b"SAME"
+    assert not (tmp_path / WeatherPDFDownloader.CURRENT_PDF).exists()
+
+
+def test_case_C_change(tmp_path):
+    """Case C: only last exists. New download is different from last."""
+    last = tmp_path / WeatherPDFDownloader.LAST_PDF
+    last.write_bytes(b"OLD")
+
+    dl = DummyDL(tmp_path, [b"NEW"])
+    changed = dl.update()
+
+    assert changed is True
+    assert (tmp_path / WeatherPDFDownloader.LAST_PDF).read_bytes() == b"OLD"
+    assert (tmp_path / WeatherPDFDownloader.CURRENT_PDF).read_bytes() == b"NEW"
+
+
+def test_case_D_no_change(tmp_path):
+    """Case D: both exists. New download is the same as current."""
+    last = tmp_path / WeatherPDFDownloader.LAST_PDF
+    last.write_bytes(b"LAST")
+    current = tmp_path / WeatherPDFDownloader.CURRENT_PDF
+    current.write_bytes(b"CURRENT")
+
+    dl = DummyDL(tmp_path, [b"CURRENT"])
+    changed = dl.update()
+
+    assert changed is False
+    assert (tmp_path / WeatherPDFDownloader.LAST_PDF).read_bytes() == b"CURRENT"
+    assert not (tmp_path / WeatherPDFDownloader.CURRENT_PDF).exists()
+
+
+def test_case_D_change(tmp_path):
+    """Case D: both exists. New download is different from current."""
+    last = tmp_path / WeatherPDFDownloader.LAST_PDF
+    last.write_bytes(b"LAST")
+    current = tmp_path / WeatherPDFDownloader.CURRENT_PDF
+    current.write_bytes(b"CURRENT")
+
+    dl = DummyDL(tmp_path, [b"NEWER"])
+    changed = dl.update()
+
+    assert changed is True
+    assert (tmp_path / WeatherPDFDownloader.LAST_PDF).read_bytes() == b"CURRENT"
+    assert (tmp_path / WeatherPDFDownloader.CURRENT_PDF).read_bytes() == b"NEWER"
