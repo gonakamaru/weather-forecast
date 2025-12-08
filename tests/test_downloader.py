@@ -1,6 +1,6 @@
 import pytest
 from pathlib import Path
-from downloader import WeatherPDFDownloader
+from src.downloader import WeatherPDFDownloader
 
 
 class DummyDL(WeatherPDFDownloader):
