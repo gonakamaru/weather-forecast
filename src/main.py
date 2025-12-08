@@ -5,8 +5,8 @@
 #
 # Enjoy coding! 🛸
 # ==========================================
-from cli import parse_args
-from downloader import WeatherPDFDownloader
+from src.cli import parse_args
+from src.downloader import WeatherPDFDownloader
 
 WEATHER_PDF_URL = "https://www.data.jma.go.jp/yoho/data/wxchart/quick/ASAS_COLOR.pdf"
 
