@@ -1,5 +1,3 @@
-# weather/downloader.py
-
 from pathlib import Path
 import hashlib
 import urllib.request  # or requests

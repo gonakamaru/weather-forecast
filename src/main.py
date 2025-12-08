@@ -7,7 +7,9 @@
 # ==========================================
 from src.cli import parse_args
 from src.downloader import WeatherPDFDownloader
+from src.salesforce_client import SalesforceClient
 
+DATA_DIR = "./data"
 WEATHER_PDF_URL = "https://www.data.jma.go.jp/yoho/data/wxchart/quick/ASAS_COLOR.pdf"
 
 
@@ -30,12 +32,22 @@ def main():
         pass
 
     downloader = WeatherPDFDownloader(
-        data_dir="./data",
+        data_dir=DATA_DIR,
         weather_pdf_url=WEATHER_PDF_URL,
     )
 
     result, pdf_hash = downloader.update()
     print(f"downloader: {result}, {pdf_hash}")
+
+    if result or True:
+        print("salesforce")
+        sf = SalesforceClient()
+
+        pdf_hash = ""  # No Hash yet
+        records = sf.query(
+            f"SELECT Id, Name FROM Weather_Report__c WHERE PDF_Hash__c = '{pdf_hash}' LIMIT 1"
+        )
+        print(records)
 
 
 if __name__ == "__main__":
