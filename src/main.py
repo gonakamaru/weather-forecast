@@ -43,11 +43,12 @@ def main():
         print("salesforce")
         sf = SalesforceClient()
 
-        pdf_hash = ""  # No Hash yet
-        records = sf.query(
-            f"SELECT Id, Name FROM Weather_Report__c WHERE PDF_Hash__c = '{pdf_hash}' LIMIT 1"
-        )
+        records = sf.find_or_create_records(pdf_hash)
         print(records)
+        if not records:
+            print("Records not found")
+        else:
+            print("Records exists")
 
 
 if __name__ == "__main__":
