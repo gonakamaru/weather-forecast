@@ -23,7 +23,8 @@ class WeatherPDFDownloader:
         # Case A: neither exists
         if not last_exists and not current_exists:
             self._download()
-            return True  # new file
+            current_hash = WeatherPDFDownloader.hash_pdf(self.current_pdf_path)
+            return True, current_hash  # new file
 
         # Case B: only current exists
         if not last_exists and current_exists:
@@ -73,9 +74,9 @@ class WeatherPDFDownloader:
 
         if last_hash == current_hash:
             self._delete(self.current_pdf_path)
-            return False  # no change
+            return False, current_hash  # no change
 
-        return True  # changed
+        return True, current_hash  # changed
 
     @classmethod
     def hash_pdf(cls, path: Path) -> str:

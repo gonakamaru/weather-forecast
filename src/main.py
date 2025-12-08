@@ -29,13 +29,13 @@ def main():
         # Placeholder for dryrun logic
         pass
 
-    manager = WeatherPDFDownloader(
+    downloader = WeatherPDFDownloader(
         data_dir="./data",
         weather_pdf_url=WEATHER_PDF_URL,
     )
 
-    result = manager.update()
-    print(result)
+    result, pdf_hash = downloader.update()
+    print(f"downloader: {result}, {pdf_hash}")
 
 
 if __name__ == "__main__":
