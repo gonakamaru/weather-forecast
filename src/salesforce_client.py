@@ -75,6 +75,33 @@ class SalesforceClient:
             instance_url=instance_url,
         )
 
+    def find_or_create_records(self, pdf_hash: str):
+        if not pdf_hash:
+            return []
+
+        # Escape single quotes for SOQL safety
+        escaped_hash = pdf_hash.replace("'", "\\'")
+
+        query = (
+            "SELECT Id, Name, PDF_Hash__c, Forecast__c, Chart_Image_Id__c "
+            f"FROM Weather_Report__c WHERE PDF_Hash__c = '{escaped_hash}' LIMIT 1"
+        )
+
+        records = self.query(query)
+
+        if not records:
+            self.create(
+                "Weather_Report__c",
+                {
+                    "Name": "DEV Weather Report",
+                    "PDF_Hash__c": pdf_hash,
+                },
+            )
+            # Re-query to return the new record
+            records = self.query(query)
+
+        return records
+
     # --------------------------------------------------
     # Public Helpers
     # --------------------------------------------------
