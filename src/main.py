@@ -39,16 +39,15 @@ def main():
     result, pdf_hash = downloader.update()
     print(f"downloader: {result}, {pdf_hash}")
 
-    if result or True:
+    if result:
+        print("png")
+        downloader.create_png()
+        downloader.create_small_png(width=300)
+
         print("salesforce")
         sf = SalesforceClient()
-
         records = sf.find_or_create_records(pdf_hash)
         print(records)
-        if not records:
-            print("Records not found")
-        else:
-            print("Records exists")
 
 
 if __name__ == "__main__":

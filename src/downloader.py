@@ -1,11 +1,16 @@
 from pathlib import Path
 import hashlib
 import urllib.request  # or requests
+from pdf2image import convert_from_path
+from PIL import Image
+import os
 
 
 class WeatherPDFDownloader:
     CURRENT_PDF = "current.pdf"
     LAST_PDF = "last.pdf"
+    WEATHER_PNG = "weather.png"
+    WEATHER_SMALL_PNG = "weather_small.png"
 
     def __init__(self, data_dir: str, weather_pdf_url: str):
         self.data_path = Path(data_dir)
@@ -40,6 +45,28 @@ class WeatherPDFDownloader:
         self._rename(self.current_pdf_path, self.last_pdf_path)
         self._download()
         return self._compare_and_cleanup()
+
+    def create_png(self) -> None:
+        """Convert the current PDF to a PNG image."""
+        src_path = self.current_pdf_path
+        dst_path = self.data_path / WeatherPDFDownloader.WEATHER_PNG
+        pages = convert_from_path(src_path)
+        pages[0].save(dst_path)
+
+    def create_small_png(self, width: int = 300) -> None:
+        """Resize the weather PNG to a smaller width while maintaining aspect ratio."""
+        src_path = self.data_path / WeatherPDFDownloader.WEATHER_PNG
+        dst_path = self.data_path / WeatherPDFDownloader.WEATHER_SMALL_PNG
+
+        img = Image.open(src_path)
+        w, h = img.size
+        ratio = width / float(w)
+        new_size = (width, int(h * ratio))
+
+        img = img.resize(
+            new_size, Image.LANCZOS
+        )  # Use LANCZOS for high-quality downsampling
+        img.save(dst_path, optimize=True)
 
     # ------------------
     # Utility Methods
