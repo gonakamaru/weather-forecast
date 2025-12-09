@@ -38,14 +38,14 @@ def main():
 
     result, pdf_hash = downloader.update()
     print(f"downloader: {result}, {pdf_hash}")
+
     if result:
         print("png")
         downloader.create_png()
+        downloader.create_small_png(width=300)
 
-    if result or True:
         print("salesforce")
         sf = SalesforceClient()
-
         records = sf.find_or_create_records(pdf_hash)
         print(records)
 
