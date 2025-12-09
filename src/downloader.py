@@ -1,11 +1,13 @@
 from pathlib import Path
 import hashlib
 import urllib.request  # or requests
+from pdf2image import convert_from_path
 
 
 class WeatherPDFDownloader:
     CURRENT_PDF = "current.pdf"
     LAST_PDF = "last.pdf"
+    WEATHER_PNG = "weather.png"
 
     def __init__(self, data_dir: str, weather_pdf_url: str):
         self.data_path = Path(data_dir)
@@ -40,6 +42,11 @@ class WeatherPDFDownloader:
         self._rename(self.current_pdf_path, self.last_pdf_path)
         self._download()
         return self._compare_and_cleanup()
+
+    def create_png(self) -> None:
+        """Convert the current PDF to a PNG image."""
+        pages = convert_from_path(self.current_pdf_path)
+        pages[0].save(self.data_path / WeatherPDFDownloader.WEATHER_PNG)
 
     # ------------------
     # Utility Methods
