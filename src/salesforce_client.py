@@ -139,8 +139,8 @@ class SalesforceClient:
             """
             versions = self.query(version_query)
 
-            if versions["records"]:
-                title = versions["records"][0]["Title"]
+            if versions:
+                title = versions[0]["Title"]
                 if title == desired_title:
                     # Found an existing "small"
                     return None
@@ -161,6 +161,10 @@ class SalesforceClient:
         # Create ContentVersion
         new_version_id = self.sf.ContentVersion.create(body)["id"]
         return new_version_id
+
+    def update_forecast(self, record_id: str, forecast_text: str):
+        fields = {"Forecast__c": forecast_text}
+        return self.update("Weather_Report__c", record_id, fields)
 
     # --------------------------------------------------
     # Public Helpers

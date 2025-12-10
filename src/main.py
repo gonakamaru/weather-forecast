@@ -8,6 +8,7 @@
 from src.cli import parse_args
 from src.downloader import WeatherPDFDownloader
 from src.salesforce_client import SalesforceClient
+from src.forecast_ai import WeatherVision
 
 DATA_DIR = "./data"
 WEATHER_PDF_URL = "https://www.data.jma.go.jp/yoho/data/wxchart/quick/ASAS_COLOR.pdf"
@@ -57,6 +58,20 @@ def main():
             print("Uploaded new ContentVersion:", cv_id)
         else:
             print("small.png already exists, skipping.")
+
+        wv = WeatherVision()
+        forecast = wv.generate_forecast(
+            downloader.data_path / WeatherPDFDownloader.WEATHER_PNG,
+            "Title and description\n<image>",
+        )
+        print(forecast)
+
+        lines = forecast.split("\n", 1)  # Split into at most 2 parts
+        title = lines[0]
+        content = lines[1] if len(lines) > 1 else ""
+
+        sf.update_forecast(record_id, content)
+        print("Updated forecast in Salesforce.")
 
 
 if __name__ == "__main__":
