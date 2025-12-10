@@ -42,12 +42,21 @@ def main():
     if result:
         print("png")
         downloader.create_png()
-        downloader.create_small_png(width=300)
+        small_png_path = downloader.create_small_png(width=300)
 
         print("salesforce")
         sf = SalesforceClient()
         records = sf.find_or_create_records(pdf_hash)
         print(records)
+        record_id = records[0]["Id"]
+        print(record_id)
+
+        cv_id = sf.ensure_small_png(record_id, small_png_path)
+
+        if cv_id:
+            print("Uploaded new ContentVersion:", cv_id)
+        else:
+            print("small.png already exists, skipping.")
 
 
 if __name__ == "__main__":

@@ -53,6 +53,8 @@ class WeatherPDFDownloader:
         pages = convert_from_path(src_path)
         pages[0].save(dst_path)
 
+        return dst_path
+
     def create_small_png(self, width: int = 300) -> None:
         """Resize the weather PNG to a smaller width while maintaining aspect ratio."""
         src_path = self.data_path / WeatherPDFDownloader.WEATHER_PNG
@@ -67,6 +69,8 @@ class WeatherPDFDownloader:
             new_size, Image.LANCZOS
         )  # Use LANCZOS for high-quality downsampling
         img.save(dst_path, optimize=True)
+
+        return dst_path
 
     # ------------------
     # Utility Methods
