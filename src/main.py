@@ -66,6 +66,13 @@ def main():
         )
         print(forecast)
 
+        lines = forecast.split("\n", 1)  # Split into at most 2 parts
+        title = lines[0]
+        content = lines[1] if len(lines) > 1 else ""
+
+        sf.update_forecast(record_id, content)
+        print("Updated forecast in Salesforce.")
+
 
 if __name__ == "__main__":
     main()
