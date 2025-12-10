@@ -1,9 +1,11 @@
 # 📘 Weather Chart → Forecast → Salesforce
+
 A compact proof-of-concept that ingests JMA surface analysis PDFs, extracts a forecast using LLaVA, and stores the results in Salesforce.
 
 ---
 
 ## 🌤️ Project Overview
+
 This project converts a single JMA weather chart PDF into structured content that can be stored inside Salesforce Developer Edition:
 
 1. **Process the input PDF**
@@ -17,6 +19,7 @@ PDF tooling, image conversion, LLM usage, orchestration design, and Salesforce R
 ---
 
 ## 🧩 Project Goals
+
 - Keep the architecture modular and testable
 - Maintain a clean separation of concerns
 - Store outputs efficiently to stay within Salesforce limits
@@ -26,6 +29,7 @@ PDF tooling, image conversion, LLM usage, orchestration design, and Salesforce R
 ---
 
 ## 🏗 Current State (MVP)
+
 The script runs end-to-end and performs all major tasks:
 
 - Downloads or ingests the PDF
@@ -38,6 +42,7 @@ This marks the initial versioning point (`v0.1.0`).
 ---
 
 ## 🚀 Next Steps
+
 - Refactor: move PDF/PNG logic into dedicated classes
 - Add pipeline orchestrator for clearer flow
 - Expand tests for parent/child class structure

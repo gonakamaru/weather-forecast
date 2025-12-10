@@ -8,7 +8,9 @@ and the versioning uses [Semantic Versioning](https://semver.org/).
 ---
 
 ## [v0.1.0] - 2025-12-11
+
 ### Added
+
 - First working MVP of the Weather Chart -> Forecast -> Salesforce pipeline
 - PDF ingestion + PNG conversion
 - Preview image generation
