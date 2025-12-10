@@ -1,23 +1,47 @@
 # 📘 Weather Chart → Forecast → Salesforce
+A compact proof-of-concept that ingests JMA surface analysis PDFs, extracts a forecast using LLaVA, and stores the results in Salesforce.
 
-A compact PoC project exploring PDF ingestion, LLaVA interpretation, and Salesforce storage.
+---
 
 ## 🌤️ Project Overview
+This project converts a single JMA weather chart PDF into structured content that can be stored inside Salesforce Developer Edition:
 
-    This project experiments with turning JMA surface analysis charts into:
-    1.  A readable forecast summary (via LLaVA)
-    2.  A stored record inside Salesforce Developer Edition, including:
-        - Original PDF
-        - A resized “tiny preview” image
-        - AI-generated forecast text
+1. **Process the input PDF**
+2. **Generate a standard and a small preview PNG**
+3. **Extract a short forecast summary using LLaVA**
+4. **Upload everything into Salesforce** (original PDF hash, preview PNG, forecast text)
 
-    The final script will be simple (≈100 lines), but the learning is broad:
-    PDF tooling, image conversion, LLM interpretation, CLI design, and Salesforce REST flows.
+It’s a small script, but touches a wide range of skills:
+PDF tooling, image conversion, LLM usage, orchestration design, and Salesforce REST integration.
+
+---
 
 ## 🧩 Project Goals
+- Keep the architecture modular and testable
+- Maintain a clean separation of concerns
+- Store outputs efficiently to stay within Salesforce limits
+- Make the code easy to extend as new ideas come up
+- Keep the repo tidy and versioned with meaningful git tags
 
-    -   Explore modular POCs for each subsystem
-    -   Integrate them into one reliable script
-    -   Store outputs efficiently in Salesforce Free/Dev limits
-    -   Keep repo clean, branch-friendly, and easy to extend
-    -   Learn each part without pressure
+---
+
+## 🏗 Current State (MVP)
+The script runs end-to-end and performs all major tasks:
+
+- Downloads or ingests the PDF
+- Converts page to PNG producing a standard and a small preview version
+- Gets a forecast summary from LLaVA
+- Pushes the results into Salesforce
+
+This marks the initial versioning point (`v0.1.0`).
+
+---
+
+## 🚀 Next Steps
+- Refactor: move PDF/PNG logic into dedicated classes
+- Add pipeline orchestrator for clearer flow
+- Expand tests for parent/child class structure
+- Improve CLI experience
+- Track tasks using GitHub Issues and (new) GitHub Project board
+
+---
