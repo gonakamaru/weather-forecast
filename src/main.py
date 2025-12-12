@@ -7,7 +7,7 @@
 # ==========================================
 from pathlib import Path
 from src.cli import parse_args
-from src.downloader import WeatherPDFDownloader
+from src.chart.downloader import WeatherPDFDownloader
 from src.chart.processors.pdf_tools import pdf_to_png
 from src.chart.processors.image_tools import resize_png
 from src.salesforce_client import SalesforceClient

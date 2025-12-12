@@ -1,7 +1,7 @@
 import pytest
 from pathlib import Path
 from unittest.mock import patch, MagicMock
-from src.downloader import WeatherPDFDownloader
+from src.chart.downloader import WeatherPDFDownloader
 
 
 class DummyDL(WeatherPDFDownloader):
