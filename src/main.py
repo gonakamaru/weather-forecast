@@ -39,10 +39,9 @@ def main():
 
     downloader = WeatherPDFDownloader(Path(DATA_DIR), WEATHER_PDF_URL)
 
-    result, pdf_hash, pdf_path = downloader.refresh_pdf()
-    print(f"downloader: {result}, {pdf_hash}, {pdf_path}")
+    updated, pdf_hash, pdf_path = downloader.refresh_pdf()
 
-    if result:
+    if updated:
         # Convert to PNG for AI and Salesforce
         output_regular_png_path = Path(DATA_DIR) / WEATHER_PNG
         regular_png_path = pdf_to_png(pdf_path, output_regular_png_path)
