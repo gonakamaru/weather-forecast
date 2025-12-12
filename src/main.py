@@ -43,10 +43,11 @@ def main():
     print(f"downloader: {result}, {pdf_hash}, {pdf_path}")
 
     if result:
-        print("png")
+        # Convert to PNG for AI and Salesforce
         output_regular_png_path = Path(DATA_DIR) / WEATHER_PNG
         regular_png_path = pdf_to_png(pdf_path, output_regular_png_path)
 
+        # Create resized 300px PNG for Salesforce (lightweight)
         output_small_png_path = Path(DATA_DIR) / WEATHER_SMALL_PNG
         small_png_path = resize_png(regular_png_path, output_small_png_path, width=300)
 
