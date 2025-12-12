@@ -5,13 +5,18 @@
 #
 # Enjoy coding! 🛸
 # ==========================================
+from pathlib import Path
 from src.cli import parse_args
 from src.downloader import WeatherPDFDownloader
+from src.chart.processors.pdf_tools import pdf_to_png
+from src.chart.processors.image_tools import resize_png
 from src.salesforce_client import SalesforceClient
 from src.forecast_ai import WeatherVision
 
-DATA_DIR = "./data"
 WEATHER_PDF_URL = "https://www.data.jma.go.jp/yoho/data/wxchart/quick/ASAS_COLOR.pdf"
+DATA_DIR = "./data"
+WEATHER_PNG = "weather.png"
+WEATHER_SMALL_PNG = "weather_small.png"
 
 
 def main():
@@ -32,18 +37,18 @@ def main():
         # Placeholder for dryrun logic
         pass
 
-    downloader = WeatherPDFDownloader(
-        data_dir=DATA_DIR,
-        weather_pdf_url=WEATHER_PDF_URL,
-    )
+    downloader = WeatherPDFDownloader(Path(DATA_DIR), WEATHER_PDF_URL)
 
-    result, pdf_hash = downloader.update()
-    print(f"downloader: {result}, {pdf_hash}")
+    result, pdf_hash, pdf_path = downloader.refresh_pdf()
+    print(f"downloader: {result}, {pdf_hash}, {pdf_path}")
 
     if result:
         print("png")
-        downloader.create_png()
-        small_png_path = downloader.create_small_png(width=300)
+        output_regular_png_path = Path(DATA_DIR) / WEATHER_PNG
+        regular_png_path = pdf_to_png(pdf_path, output_regular_png_path)
+
+        output_small_png_path = Path(DATA_DIR) / WEATHER_SMALL_PNG
+        small_png_path = resize_png(regular_png_path, output_small_png_path, width=300)
 
         print("salesforce")
         sf = SalesforceClient()
@@ -61,8 +66,7 @@ def main():
 
         wv = WeatherVision()
         forecast = wv.generate_forecast(
-            downloader.data_path / WeatherPDFDownloader.WEATHER_PNG,
-            "Title and description\n<image>",
+            regular_png_path, "Title and description\n<image>"
         )
         print(forecast)
 
