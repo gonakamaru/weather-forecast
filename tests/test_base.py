@@ -2,7 +2,7 @@ import builtins
 import pytest
 from unittest.mock import patch, MagicMock
 
-from src.salesforce_client import SalesforceClient
+from src.salesforce.base import SalesforceClient
 
 
 FAKE_PRIVATE_KEY = b"-----BEGIN PRIVATE KEY-----\nFAKEKEY\n-----END PRIVATE KEY-----"
@@ -24,10 +24,10 @@ def setup_auth_patches():
         builtins, "open", return_value=MagicMock(read=lambda: FAKE_PRIVATE_KEY)
     )
 
-    jwt_patch = patch("src.salesforce_client.jwt.encode", return_value="FAKE_JWT")
+    jwt_patch = patch("src.salesforce.base.jwt.encode", return_value="FAKE_JWT")
 
-    post_patch = patch("src.salesforce_client.requests.post")
-    sf_patch = patch("src.salesforce_client.Salesforce")
+    post_patch = patch("src.salesforce.base.requests.post")
+    sf_patch = patch("src.salesforce.base.Salesforce")
 
     return open_patch, jwt_patch, post_patch, sf_patch
 
