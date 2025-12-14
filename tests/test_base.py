@@ -2,7 +2,7 @@ import builtins
 import pytest
 from unittest.mock import patch, MagicMock
 
-from src.salesforce.base import SalesforceClient
+from src.salesforce.base import SalesforceBaseClient
 
 
 FAKE_PRIVATE_KEY = b"-----BEGIN PRIVATE KEY-----\nFAKEKEY\n-----END PRIVATE KEY-----"
@@ -45,7 +45,7 @@ def test_salesforce_auth(mock_env):
         }
         post_mock.return_value.raise_for_status = lambda: None
 
-        client = SalesforceClient()
+        client = SalesforceBaseClient()
 
         sf_mock.assert_called_once_with(
             session_id=FAKE_ACCESS_TOKEN,
@@ -73,7 +73,7 @@ def test_salesforce_query(mock_env):
 
         sf_mock.return_value = fake_sf
 
-        client = SalesforceClient()
+        client = SalesforceBaseClient()
         result = client.query("SELECT Id FROM Account")
 
         assert result == [{"Id": "001"}]
@@ -93,7 +93,7 @@ def test_find_or_create_records_1(mock_env):
 
         sf_mock.return_value = MagicMock()
 
-        client = SalesforceClient()
+        client = SalesforceBaseClient()
 
         with patch.object(client, "query") as mock_query, patch.object(
             client, "create"
@@ -132,7 +132,7 @@ def test_find_or_create_records_2(mock_env):
 
         sf_mock.return_value = MagicMock()
 
-        client = SalesforceClient()
+        client = SalesforceBaseClient()
 
         with patch.object(client, "query") as mock_query, patch.object(
             client, "create"
@@ -181,7 +181,7 @@ def test_salesforce_crud(mock_env):
 
         sf_mock.return_value = fake_sf
 
-        client = SalesforceClient()
+        client = SalesforceBaseClient()
 
         assert client.create("Weather_Report__c", {"PDF_Hash__c": "aaa"}) == {
             "id": "NEW_ID"

@@ -20,7 +20,7 @@ from os.path import basename, splitext
 load_dotenv()
 
 
-class SalesforceClient:
+class SalesforceBaseClient:
     def __init__(self):
         self.client_id = os.getenv("SF_CLIENT_ID")
         self.username = os.getenv("SF_USERNAME")

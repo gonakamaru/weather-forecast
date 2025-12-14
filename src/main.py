@@ -10,7 +10,7 @@ from src.cli import parse_args
 from src.chart.downloader import WeatherPDFDownloader
 from src.chart.processors.pdf_tools import pdf_to_png
 from src.chart.processors.image_tools import resize_png
-from src.salesforce.base import SalesforceClient
+from src.salesforce.base import SalesforceBaseClient
 from src.forecast_ai import WeatherVision
 
 WEATHER_PDF_URL = "https://www.data.jma.go.jp/yoho/data/wxchart/quick/ASAS_COLOR.pdf"
@@ -51,7 +51,7 @@ def main():
         small_png_path = resize_png(regular_png_path, output_small_png_path, width=300)
 
         print("salesforce")
-        sf = SalesforceClient()
+        sf = SalesforceBaseClient()
         records = sf.find_or_create_records(pdf_hash)
         print(records)
         record_id = records[0]["Id"]
