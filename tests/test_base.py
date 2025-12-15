@@ -3,6 +3,7 @@ import pytest
 from unittest.mock import patch, MagicMock
 
 from src.salesforce.base import SalesforceBaseClient
+from src.salesforce.weather import SFWeatherClient
 
 
 FAKE_PRIVATE_KEY = b"-----BEGIN PRIVATE KEY-----\nFAKEKEY\n-----END PRIVATE KEY-----"
@@ -93,7 +94,7 @@ def test_find_or_create_records_1(mock_env):
 
         sf_mock.return_value = MagicMock()
 
-        client = SalesforceBaseClient()
+        client = SFWeatherClient()
 
         with patch.object(client, "query") as mock_query, patch.object(
             client, "create"
@@ -132,7 +133,7 @@ def test_find_or_create_records_2(mock_env):
 
         sf_mock.return_value = MagicMock()
 
-        client = SalesforceBaseClient()
+        client = SFWeatherClient()
 
         with patch.object(client, "query") as mock_query, patch.object(
             client, "create"
