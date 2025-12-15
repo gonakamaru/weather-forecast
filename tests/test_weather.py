@@ -60,7 +60,7 @@ def test_find_or_create_records_1(mock_env):
                 ],  # second query: record created
             ]
 
-            results = client.find_or_create_records(pdf_hash)
+            results = client.find_or_create_report(pdf_hash)
 
             # verify creation happened
             mock_create.assert_called_once_with(
@@ -94,7 +94,7 @@ def test_find_or_create_records_2(mock_env):
 
             mock_query.return_value = [{"Id": "existing", "PDF_Hash__c": pdf_hash}]
 
-            results = client.find_or_create_records(pdf_hash)
+            results = client.find_or_create_report(pdf_hash)
 
             # No creation this time
             mock_create.assert_not_called()

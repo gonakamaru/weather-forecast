@@ -52,12 +52,12 @@ def main():
 
         print("salesforce")
         sf = SFWeatherClient()
-        records = sf.find_or_create_records(pdf_hash)
+        records = sf.find_or_create_report(pdf_hash)
         print(records)
         record_id = records[0]["Id"]
         print(record_id)
 
-        cv_id = sf.ensure_small_png(record_id, small_png_path)
+        cv_id = sf.ensure_preview_image(record_id, small_png_path)
 
         if cv_id:
             print("Uploaded new ContentVersion:", cv_id)
