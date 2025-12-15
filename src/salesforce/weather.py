@@ -6,10 +6,13 @@ from .base import SalesforceBaseClient
 class SFWeatherClient(SalesforceBaseClient):
     """Client for managing weather data in Salesforce."""
 
-    def find_or_create_records(self, pdf_hash: str):
+    def find_or_create_report(self, pdf_hash: str):
         """
         Finds Weather_Report__c records by PDF hash.
         If none found, creates a new record.
+
+        Args:
+            pdf_hash: The hash of the PDF to search for.
 
         Returns:
             A list of matching records.
@@ -41,15 +44,19 @@ class SFWeatherClient(SalesforceBaseClient):
 
         return records
 
-    def ensure_small_png(self, record_id: str, file_path: str) -> str | None:
+    def ensure_preview_image(self, record_id: str, file_path: str) -> str | None:
         """
-        Ensures that a file named 'small.png', or a desired title, is linked to the given Salesforce record.
-        If a ContentVersion with Title='small' already exists, no upload happens.
+        Ensures that a ContentVersion with the given file is linked to the record.
+        If such a ContentVersion already exists (by Title), does nothing.
+
+        Args:
+            record_id: The Id of the Weather_Report__c record.
+            file_path: Path to the PNG file to upload.
 
         Returns:
-            ContentVersion Id if a new file was uploaded,
-            None if it already existed.
+            The new ContentVersion Id if uploaded, else None.
         """
+
         # Salesforce strips extensions -> Title = "small"
         desired_title, _ = splitext(basename(file_path))
 
@@ -98,7 +105,16 @@ class SFWeatherClient(SalesforceBaseClient):
         return new_version_id
 
     def update_forecast(self, record_id: str, forecast_text: str):
-        """Updates the Forecast__c field of the given Weather_Report__c record."""
+        """
+        Updates the Forecast__c field of the given Weather_Report__c record.
+
+        Args:
+            record_id: The Id of the Weather_Report__c record.
+            forecast_text: The forecast text to set.
+
+        Returns:
+            True if update succeeded, else False.
+        """
 
         fields = {"Forecast__c": forecast_text}
         return self.update("Weather_Report__c", record_id, fields)
