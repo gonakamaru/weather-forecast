@@ -11,7 +11,7 @@ from src.chart.downloader import WeatherPDFDownloader
 from src.chart.processors.pdf_tools import pdf_to_png
 from src.chart.processors.image_tools import resize_png
 from src.salesforce.weather import SFWeatherClient
-from src.forecast_ai import WeatherVision
+from src.forecast.generator import WeatherVision
 
 WEATHER_PDF_URL = "https://www.data.jma.go.jp/yoho/data/wxchart/quick/ASAS_COLOR.pdf"
 DATA_DIR = "./data"
