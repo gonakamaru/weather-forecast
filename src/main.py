@@ -13,7 +13,6 @@ from src.salesforce.weather import SFWeatherClient
 from src.forecast.generator import WeatherVision
 from src.orchestration.pipeline import WeatherPipeline
 
-WEATHER_PDF_URL = "https://www.data.jma.go.jp/yoho/data/wxchart/quick/ASAS_COLOR.pdf"
 DATA_DIR = "./data"
 WEATHER_PNG = "weather.png"
 WEATHER_SMALL_PNG = "weather_small.png"
