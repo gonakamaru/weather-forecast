@@ -7,11 +7,11 @@
 # ==========================================
 from pathlib import Path
 from src.cli.app import parse_args
-from src.chart.downloader import WeatherPDFDownloader
 from src.chart.processors.pdf_tools import pdf_to_png
 from src.chart.processors.image_tools import resize_png
 from src.salesforce.weather import SFWeatherClient
 from src.forecast.generator import WeatherVision
+from src.orchestration.pipeline import WeatherPipeline
 
 WEATHER_PDF_URL = "https://www.data.jma.go.jp/yoho/data/wxchart/quick/ASAS_COLOR.pdf"
 DATA_DIR = "./data"
@@ -37,9 +37,10 @@ def main():
         # Placeholder for dryrun logic
         pass
 
-    downloader = WeatherPDFDownloader(Path(DATA_DIR), WEATHER_PDF_URL)
+    pipeline = WeatherPipeline()
 
-    updated, pdf_hash, pdf_path = downloader.refresh_pdf()
+    chart = pipeline._download_chart()
+    updated, pdf_hash, pdf_path = chart["updated"], chart["hash"], chart["path"]
 
     if updated:
         # Convert to PNG for AI and Salesforce
