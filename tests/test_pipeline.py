@@ -58,3 +58,20 @@ def test_run_skips_when_should_process_is_false(mocker):
     mock_prepare.assert_not_called()
     mock_generate.assert_not_called()
     mock_publish.assert_not_called()
+
+
+def test_download_chart(monkeypatch):
+    def fake_refresh(self):
+        return True, "hash123", "/tmp/test.pdf"
+
+    monkeypatch.setattr(
+        "src.chart.downloader.WeatherPDFDownloader.refresh_pdf",
+        fake_refresh,
+    )
+
+    pipeline = WeatherPipeline()
+    result = pipeline._download_chart()
+
+    assert result["updated"] is True
+    assert result["hash"] == "hash123"
+    assert result["path"] == "/tmp/test.pdf"
