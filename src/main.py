@@ -7,8 +7,6 @@
 # ==========================================
 from pathlib import Path
 from src.cli.app import parse_args
-from src.chart.processors.pdf_tools import pdf_to_png
-from src.chart.processors.image_tools import resize_png
 from src.salesforce.weather import SFWeatherClient
 from src.forecast.generator import WeatherVision
 from src.orchestration.pipeline import WeatherPipeline
@@ -43,13 +41,7 @@ def main():
 
     if pipeline._should_process(chart):
 
-        # Convert to PNG for AI and Salesforce
-        output_regular_png_path = Path(DATA_DIR) / WEATHER_PNG
-        regular_png_path = pdf_to_png(pdf_path, output_regular_png_path)
-
-        # Create resized 300px PNG for Salesforce (lightweight)
-        output_small_png_path = Path(DATA_DIR) / WEATHER_SMALL_PNG
-        small_png_path = resize_png(regular_png_path, output_small_png_path, width=300)
+        images = pipeline._prepare_images(chart)
 
         print("salesforce")
         sf = SFWeatherClient()
@@ -58,7 +50,7 @@ def main():
         record_id = records[0]["Id"]
         print(record_id)
 
-        cv_id = sf.ensure_preview_image(record_id, small_png_path)
+        cv_id = sf.ensure_preview_image(record_id, images["small"])
 
         if cv_id:
             print("Uploaded new ContentVersion:", cv_id)
@@ -67,7 +59,7 @@ def main():
 
         wv = WeatherVision()
         forecast = wv.generate_forecast(
-            regular_png_path, "Title and description\n<image>"
+            images["regular"], "Title and description\n<image>"
         )
         print(forecast)
 

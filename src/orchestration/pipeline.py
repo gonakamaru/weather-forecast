@@ -71,9 +71,8 @@ class WeatherPipeline:
         Returns:
             dict: Paths to prepared images
         """
-
         # Convert to PNG for AI and Salesforce
-        regular_png_path = pdf_to_png(chart.pdf_path, Path(DATA_DIR) / WEATHER_PNG)
+        regular_png_path = pdf_to_png(chart["path"], Path(DATA_DIR) / WEATHER_PNG)
 
         # Create resized 300px PNG for Salesforce (lightweight)
         small_png_path = resize_png(

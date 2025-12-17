@@ -1,3 +1,4 @@
+from pathlib import Path
 from unittest.mock import MagicMock
 from src.orchestration.pipeline import WeatherPipeline
 
@@ -87,3 +88,30 @@ def test_should_process():
     # Case 2: updated is False
     chart2 = {"updated": False}
     assert pipeline._should_process(chart2) is False
+
+
+def test_prepare_images(mocker):
+    pipeline = WeatherPipeline()
+
+    mock_pdf_to_png = mocker.patch(
+        "src.orchestration.pipeline.pdf_to_png",
+        return_value=Path("/fake/weather.png"),
+    )
+    mock_resize_png = mocker.patch(
+        "src.orchestration.pipeline.resize_png",
+        return_value=Path("/fake/weather_small.png"),
+    )
+
+    fake_chart = {"path": Path("/fake/test.pdf")}
+
+    result = pipeline._prepare_images(fake_chart)
+
+    mock_pdf_to_png.assert_called_once_with(
+        fake_chart["path"], Path("./data") / "weather.png"
+    )
+    mock_resize_png.assert_called_once_with(
+        Path("/fake/weather.png"), Path("./data") / "weather_small.png", width=300
+    )
+
+    assert result["regular"] == Path("/fake/weather.png")
+    assert result["small"] == Path("/fake/weather_small.png")
