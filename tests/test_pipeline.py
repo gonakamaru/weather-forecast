@@ -75,3 +75,15 @@ def test_download_chart(monkeypatch):
     assert result["updated"] is True
     assert result["hash"] == "hash123"
     assert result["path"] == "/tmp/test.pdf"
+
+
+def test_should_process():
+    pipeline = WeatherPipeline()
+
+    # Case 1: updated is True
+    chart1 = {"updated": True}
+    assert pipeline._should_process(chart1) is True
+
+    # Case 2: updated is False
+    chart2 = {"updated": False}
+    assert pipeline._should_process(chart2) is False

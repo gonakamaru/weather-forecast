@@ -41,7 +41,8 @@ def main():
     chart = pipeline._download_chart()
     updated, pdf_hash, pdf_path = chart["updated"], chart["hash"], chart["path"]
 
-    if updated:
+    if pipeline._should_process(chart):
+
         # Convert to PNG for AI and Salesforce
         output_regular_png_path = Path(DATA_DIR) / WEATHER_PNG
         regular_png_path = pdf_to_png(pdf_path, output_regular_png_path)
