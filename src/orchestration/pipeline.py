@@ -35,8 +35,28 @@ class WeatherPipeline:
             "path": pdf_path,
         }
 
-    def _should_process(self, chart):
-        pass
+    def _should_process(self, chart: dict) -> bool:
+        """
+        Decide whether the pipeline should continue processing.
+
+        Args:
+            chart (dict): Output from _download_chart()
+
+        Returns:
+            bool: True if processing should continue
+        """
+        if not chart.get("updated", False):
+            return False
+
+        # future:
+        # if self.force:
+        #     return True
+        # if self.dryrun:
+        #     return False
+        # if not within_schedule_window():
+        #     return False
+
+        return True
 
     def _prepare_images(self, chart):
         pass
