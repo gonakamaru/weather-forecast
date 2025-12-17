@@ -2,6 +2,7 @@ from pathlib import Path
 from src.chart.downloader import WeatherPDFDownloader
 from src.chart.processors.image_tools import resize_png
 from src.chart.processors.pdf_tools import pdf_to_png
+from src.forecast.generator import WeatherVision
 
 WEATHER_PDF_URL = "https://www.data.jma.go.jp/yoho/data/wxchart/quick/ASAS_COLOR.pdf"
 DATA_DIR = "./data"
@@ -86,7 +87,28 @@ class WeatherPipeline:
         return images
 
     def _generate_forecast(self, images):
-        pass
+        """
+        Generate AI-based weather forecast from the images.
+
+        Args:
+            images (dict): Prepared images from _prepare_images()
+        Returns:
+            dict: Generated forecast with 'title' and 'content'
+        """
+        wv = WeatherVision()
+        ai_forecast = wv.generate_forecast(
+            images["regular"], "Title and description\n<image>"
+        )
+
+        lines = ai_forecast.split("\n", 1)  # Split into at most 2 parts
+        title = lines[0]
+        content = lines[1] if len(lines) > 1 else ""
+
+        forecast = {
+            "title": title,
+            "content": content,
+        }
+        return forecast
 
     def _publish(self, images, forecast):
         pass

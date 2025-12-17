@@ -115,3 +115,34 @@ def test_prepare_images(mocker):
 
     assert result["regular"] == Path("/fake/weather.png")
     assert result["small"] == Path("/fake/weather_small.png")
+
+
+def test_generate_forecast(mocker):
+    pipeline = WeatherPipeline()
+
+    fake_images = {
+        "regular": Path("/fake/weather.png"),
+        "small": Path("/fake/weather_small.png"),
+    }
+
+    fake_forecast = """Today's weather forecast:
+Sunny with scattered clouds"""
+
+    mock_weather_vision = mocker.patch(
+        "src.orchestration.pipeline.WeatherVision",
+        return_value=MagicMock(generate_forecast=MagicMock(return_value=fake_forecast)),
+    )
+
+    result = pipeline._generate_forecast(fake_images)
+
+    mock_weather_vision.assert_called_once_with()
+    mock_weather_vision.return_value.generate_forecast.assert_called_once_with(
+        fake_images["regular"], "Title and description\n<image>"
+    )
+
+    fake_forecast_result = {
+        "title": "Today's weather forecast:",
+        "content": "Sunny with scattered clouds",
+    }
+
+    assert result == fake_forecast_result

@@ -8,7 +8,6 @@
 from pathlib import Path
 from src.cli.app import parse_args
 from src.salesforce.weather import SFWeatherClient
-from src.forecast.generator import WeatherVision
 from src.orchestration.pipeline import WeatherPipeline
 
 DATA_DIR = "./data"
@@ -57,17 +56,9 @@ def main():
         else:
             print("small.png already exists, skipping.")
 
-        wv = WeatherVision()
-        forecast = wv.generate_forecast(
-            images["regular"], "Title and description\n<image>"
-        )
-        print(forecast)
+        forecast = pipeline._generate_forecast(images)
 
-        lines = forecast.split("\n", 1)  # Split into at most 2 parts
-        title = lines[0]
-        content = lines[1] if len(lines) > 1 else ""
-
-        sf.update_forecast(record_id, content)
+        sf.update_forecast(record_id, forecast["content"])
         print("Updated forecast in Salesforce.")
 
 
