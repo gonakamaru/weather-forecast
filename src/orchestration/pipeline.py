@@ -1,8 +1,12 @@
 from pathlib import Path
 from src.chart.downloader import WeatherPDFDownloader
+from src.chart.processors.image_tools import resize_png
+from src.chart.processors.pdf_tools import pdf_to_png
 
 WEATHER_PDF_URL = "https://www.data.jma.go.jp/yoho/data/wxchart/quick/ASAS_COLOR.pdf"
 DATA_DIR = "./data"
+WEATHER_PNG = "weather.png"
+WEATHER_SMALL_PNG = "weather_small.png"
 
 
 class WeatherPipeline:
@@ -58,8 +62,29 @@ class WeatherPipeline:
 
         return True
 
-    def _prepare_images(self, chart):
-        pass
+    def _prepare_images(self, chart: dict) -> dict:
+        """
+        Prepare PNG images from the downloaded PDF for further processing.
+
+        Args:
+            chart (dict): Output from _download_chart()
+        Returns:
+            dict: Paths to prepared images
+        """
+
+        # Convert to PNG for AI and Salesforce
+        regular_png_path = pdf_to_png(chart.pdf_path, Path(DATA_DIR) / WEATHER_PNG)
+
+        # Create resized 300px PNG for Salesforce (lightweight)
+        small_png_path = resize_png(
+            regular_png_path, Path(DATA_DIR) / WEATHER_SMALL_PNG, width=300
+        )
+
+        images = {
+            "regular": regular_png_path,
+            "small": small_png_path,
+        }
+        return images
 
     def _generate_forecast(self, images):
         pass
