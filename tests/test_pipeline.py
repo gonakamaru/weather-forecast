@@ -62,6 +62,9 @@ def test_run_skips_when_should_process_is_false(mocker):
 
 
 def test_download_chart(monkeypatch):
+    pipeline = WeatherPipeline()
+
+    # Arrange
     def fake_refresh(self):
         return True, "hash123", "/tmp/test.pdf"
 
@@ -70,7 +73,7 @@ def test_download_chart(monkeypatch):
         fake_refresh,
     )
 
-    pipeline = WeatherPipeline()
+    # Act
     result = pipeline._download_chart()
 
     assert result["updated"] is True
@@ -93,6 +96,7 @@ def test_should_process():
 def test_prepare_images(mocker):
     pipeline = WeatherPipeline()
 
+    # Arrange
     mock_pdf_to_png = mocker.patch(
         "src.orchestration.pipeline.pdf_to_png",
         return_value=Path("/fake/weather.png"),
@@ -104,8 +108,10 @@ def test_prepare_images(mocker):
 
     fake_chart = {"path": Path("/fake/test.pdf")}
 
+    # Act
     result = pipeline._prepare_images(fake_chart)
 
+    # Assert
     mock_pdf_to_png.assert_called_once_with(
         fake_chart["path"], Path("./data") / "weather.png"
     )
@@ -118,9 +124,9 @@ def test_prepare_images(mocker):
 
 
 def test_generate_forecast(mocker):
-    # Arrange
     pipeline = WeatherPipeline()
 
+    # Arrange
     fake_images = {
         "regular": Path("/fake/weather.png"),
         "small": Path("/fake/weather_small.png"),

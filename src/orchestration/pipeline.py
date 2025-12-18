@@ -12,9 +12,18 @@ WEATHER_SMALL_PNG = "weather_small.png"
 
 
 class WeatherPipeline:
-    """Orchestrates the weather forecast workflow."""
+    """Pipeline to process weather charts and publish forecasts to Salesforce."""
 
     def run(self):
+        """
+        Execute the weather forecast pipeline.
+        Steps:
+        1. Download the latest weather chart PDF.
+        2. Determine if processing is needed based on updates.
+        3. Convert PDF to PNG images.
+        4. Generate AI-based weather forecast from images.
+        5. Publish the forecast and images to Salesforce.
+        """
         chart = self._download_chart()
 
         if not self._should_process(chart):
@@ -47,7 +56,6 @@ class WeatherPipeline:
 
         Args:
             chart (dict): Output from _download_chart()
-
         Returns:
             bool: True if processing should continue
         """
@@ -87,7 +95,7 @@ class WeatherPipeline:
         }
         return images
 
-    def _generate_forecast(self, images):
+    def _generate_forecast(self, images: dict) -> dict:
         """
         Generate AI-based weather forecast from the images.
 
