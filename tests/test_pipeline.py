@@ -62,6 +62,9 @@ def test_run_skips_when_should_process_is_false(mocker):
 
 
 def test_download_chart(monkeypatch):
+    pipeline = WeatherPipeline()
+
+    # Arrange
     def fake_refresh(self):
         return True, "hash123", "/tmp/test.pdf"
 
@@ -70,9 +73,10 @@ def test_download_chart(monkeypatch):
         fake_refresh,
     )
 
-    pipeline = WeatherPipeline()
+    # Act
     result = pipeline._download_chart()
 
+    # Assert
     assert result["updated"] is True
     assert result["hash"] == "hash123"
     assert result["path"] == "/tmp/test.pdf"
@@ -93,6 +97,7 @@ def test_should_process():
 def test_prepare_images(mocker):
     pipeline = WeatherPipeline()
 
+    # Arrange
     mock_pdf_to_png = mocker.patch(
         "src.orchestration.pipeline.pdf_to_png",
         return_value=Path("/fake/weather.png"),
@@ -104,6 +109,7 @@ def test_prepare_images(mocker):
 
     fake_chart = {"path": Path("/fake/test.pdf")}
 
+    # Act
     result = pipeline._prepare_images(fake_chart)
 
     mock_pdf_to_png.assert_called_once_with(
@@ -113,18 +119,20 @@ def test_prepare_images(mocker):
         Path("/fake/weather.png"), Path("./data") / "weather_small.png", width=300
     )
 
+    # Assert
     assert result["regular"] == Path("/fake/weather.png")
     assert result["small"] == Path("/fake/weather_small.png")
 
 
 def test_generate_forecast(mocker):
-    # Arrange
     pipeline = WeatherPipeline()
 
+    # Arrange
     fake_images = {
         "regular": Path("/fake/weather.png"),
         "small": Path("/fake/weather_small.png"),
     }
+
     fake_forecast = "Today's weather forecast:\nSunny with scattered clouds"
     expected = {
         "title": "Today's weather forecast:",
@@ -145,4 +153,20 @@ def test_generate_forecast(mocker):
 
 
 def test_publish_salesforce(mocker):
-    pass
+    pipeline = WeatherPipeline()
+
+    # Arrange
+    fake_sf = mocker.patch(
+        "src.orchestration.pipeline.SFWeatherClient", autospec=True
+    ).return_value
+
+    chart = {"hash": "abc123"}
+    images = {"small": Path("/fake/small.png")}
+    forecast = {"content": "Sunny"}
+
+    # Act
+    pipeline._publish_salesforce(chart, images, forecast)
+
+    # Assert
+    fake_sf.find_or_create_report.assert_called_once_with("abc123")
+    fake_sf.update_forecast.assert_called_once()

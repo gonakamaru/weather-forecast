@@ -5,14 +5,8 @@
 #
 # Enjoy coding! 🛸
 # ==========================================
-from pathlib import Path
 from src.cli.app import parse_args
-from src.salesforce.weather import SFWeatherClient
 from src.orchestration.pipeline import WeatherPipeline
-
-DATA_DIR = "./data"
-WEATHER_PNG = "weather.png"
-WEATHER_SMALL_PNG = "weather_small.png"
 
 
 def main():
@@ -34,17 +28,7 @@ def main():
         pass
 
     pipeline = WeatherPipeline()
-
-    chart = pipeline._download_chart()
-    updated, pdf_hash, pdf_path = chart["updated"], chart["hash"], chart["path"]
-
-    if pipeline._should_process(chart):
-
-        images = pipeline._prepare_images(chart)
-
-        forecast = pipeline._generate_forecast(images)
-
-        pipeline._publish_salesforce(chart, images, forecast)
+    pipeline.run()
 
 
 if __name__ == "__main__":
