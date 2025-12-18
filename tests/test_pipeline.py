@@ -132,6 +132,7 @@ def test_generate_forecast(mocker):
         "regular": Path("/fake/weather.png"),
         "small": Path("/fake/weather_small.png"),
     }
+
     fake_forecast = "Today's weather forecast:\nSunny with scattered clouds"
     expected = {
         "title": "Today's weather forecast:",
@@ -152,4 +153,20 @@ def test_generate_forecast(mocker):
 
 
 def test_publish_salesforce(mocker):
-    pass
+    pipeline = WeatherPipeline()
+
+    # Arrange
+    fake_sf = mocker.patch(
+        "src.orchestration.pipeline.SFWeatherClient", autospec=True
+    ).return_value
+
+    chart = {"hash": "abc123"}
+    images = {"small": Path("/fake/small.png")}
+    forecast = {"content": "Sunny"}
+
+    # Act
+    pipeline._publish_salesforce(chart, images, forecast)
+
+    # Assert
+    fake_sf.find_or_create_report.assert_called_once_with("abc123")
+    fake_sf.update_forecast.assert_called_once()
