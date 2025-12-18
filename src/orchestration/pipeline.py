@@ -3,6 +3,7 @@ from src.chart.downloader import WeatherPDFDownloader
 from src.chart.processors.image_tools import resize_png
 from src.chart.processors.pdf_tools import pdf_to_png
 from src.forecast.generator import WeatherVision
+from src.salesforce.weather import SFWeatherClient
 
 WEATHER_PDF_URL = "https://www.data.jma.go.jp/yoho/data/wxchart/quick/ASAS_COLOR.pdf"
 DATA_DIR = "./data"
@@ -21,7 +22,7 @@ class WeatherPipeline:
 
         images = self._prepare_images(chart)
         forecast = self._generate_forecast(images)
-        self._publish(images, forecast)
+        self._publish_salesforce(chart, images, forecast)
 
     def _download_chart(self) -> dict:
         """
@@ -110,5 +111,23 @@ class WeatherPipeline:
         }
         return forecast
 
-    def _publish(self, images, forecast):
-        pass
+    def _publish_salesforce(self, chart: dict, images: dict, forecast: dict) -> None:
+        """
+        Publish the forecast and images to Salesforce.
+
+        Args:
+            images (dict): Prepared images from _prepare_images()
+            forecast (dict): Generated forecast from _generate_forecast()
+        """
+        sf = SFWeatherClient()
+        records = sf.find_or_create_report(chart["hash"])
+        record_id = records[0]["Id"]
+
+        # cv_id = sf.ensure_preview_image(record_id, images["small"])
+
+        # if cv_id:
+        #     print("Uploaded new ContentVersion:", cv_id)
+        # else:
+        #     print("small.png already exists, skipping.")
+
+        sf.update_forecast(record_id, forecast["content"])

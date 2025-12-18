@@ -22,7 +22,7 @@ def test_run_happy_path(mocker):
     mock_generate = mocker.patch.object(
         pipeline, "_generate_forecast", return_value=fake_forecast
     )
-    mock_publish = mocker.patch.object(pipeline, "_publish")
+    mock_publish = mocker.patch.object(pipeline, "_publish_salesforce")
 
     # Act
     pipeline.run()
@@ -32,7 +32,7 @@ def test_run_happy_path(mocker):
     mock_should.assert_called_once_with(fake_chart)
     mock_prepare.assert_called_once_with(fake_chart)
     mock_generate.assert_called_once_with(fake_images)
-    mock_publish.assert_called_once_with(fake_images, fake_forecast)
+    mock_publish.assert_called_once_with(fake_chart, fake_images, fake_forecast)
 
 
 def test_run_skips_when_should_process_is_false(mocker):
@@ -48,7 +48,7 @@ def test_run_skips_when_should_process_is_false(mocker):
 
     mock_prepare = mocker.patch.object(pipeline, "_prepare_images")
     mock_generate = mocker.patch.object(pipeline, "_generate_forecast")
-    mock_publish = mocker.patch.object(pipeline, "_publish")
+    mock_publish = mocker.patch.object(pipeline, "_publish_salesforce")
 
     # Act
     pipeline.run()
@@ -142,3 +142,7 @@ def test_generate_forecast(mocker):
     # Assert
     assert result == expected
     mock_weather_vision.return_value.generate_forecast.assert_called_once()
+
+
+def test_publish_salesforce(mocker):
+    pass
