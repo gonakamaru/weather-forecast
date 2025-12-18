@@ -42,24 +42,9 @@ def main():
 
         images = pipeline._prepare_images(chart)
 
-        print("salesforce")
-        sf = SFWeatherClient()
-        records = sf.find_or_create_report(pdf_hash)
-        print(records)
-        record_id = records[0]["Id"]
-        print(record_id)
-
-        cv_id = sf.ensure_preview_image(record_id, images["small"])
-
-        if cv_id:
-            print("Uploaded new ContentVersion:", cv_id)
-        else:
-            print("small.png already exists, skipping.")
-
         forecast = pipeline._generate_forecast(images)
 
-        sf.update_forecast(record_id, forecast["content"])
-        print("Updated forecast in Salesforce.")
+        pipeline._publish_salesforce(chart, images, forecast)
 
 
 if __name__ == "__main__":
