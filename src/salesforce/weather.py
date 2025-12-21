@@ -19,6 +19,7 @@ class SFWeatherClient(SalesforceBaseClient):
 
         Args:
             pdf_hash: The hash of the PDF to search for.
+            forecast_text: The forecast text to set in the record.
 
         Returns:
             ReportUpsertResult: record ID and whether it was created.
