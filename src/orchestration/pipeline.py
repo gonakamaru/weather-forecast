@@ -15,7 +15,27 @@ logger = logging.getLogger(__name__)
 
 
 class WeatherPipeline:
-    """Orchestrates the weather forecast workflow."""
+    """
+    Orchestrates the weather forecast workflow.
+
+    The pipeline supports a `force` mode that controls skip behavior
+    based on local file state and idempotency guards.
+
+    force (bool):
+        When True, forces the pipeline to run regardless of local file
+        existence or cache conditions. Salesforce records are created
+        or updated while idempotency guards still prevent duplicates.
+
+        When False, the pipeline respects local file state and skip
+        conditions to avoid unnecessary processing.
+
+    Intended for controlled re-runs, recovery scenarios, and MVP testing.
+    Use with caution.
+    """
+
+    def __init__(self, force: bool = False):
+        """Initialize the pipeline execution mode."""
+        self.force = force
 
     def run(self) -> bool:
         """
@@ -28,7 +48,7 @@ class WeatherPipeline:
 
         chart = self._download_chart()
 
-        if not self._should_process(chart):
+        if not self.force and not self._should_process(chart):
             logger.info("Pipeline execution skipped (should_process=False)")
             return False
 
