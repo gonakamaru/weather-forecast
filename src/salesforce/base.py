@@ -123,5 +123,5 @@ class SalesforceBaseClient:
 
         return {
             "created": created,
-            "id": record_id,
+            "record_id": record_id,
         }

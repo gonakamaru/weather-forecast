@@ -4,7 +4,7 @@ from src.chart.downloader import WeatherPDFDownloader
 from src.chart.processors.image_tools import resize_png
 from src.chart.processors.pdf_tools import pdf_to_png
 from src.forecast.generator import WeatherVision
-from src.salesforce.weather import SFWeatherClient
+from src.salesforce.weather import ReportUpsertResult, SFWeatherClient
 
 WEATHER_PDF_URL = "https://www.data.jma.go.jp/yoho/data/wxchart/quick/ASAS_COLOR.pdf"
 DATA_DIR = "./data"
@@ -59,11 +59,12 @@ class WeatherPipeline:
         forecast = self._generate_forecast(images)
 
         logger.info("Publishing results to Salesforce")
-        record_id = self._publish_salesforce(chart, images, forecast)
+        record = self._publish_salesforce(chart, images, forecast)
 
         logger.info(
-            "Salesforce publish completed: record_id=%s",
-            record_id,
+            "Salesforce publish completed: record_id=%s created=%s",
+            record.record_id,
+            record.created,
         )
 
         logger.info("Pipeline run completed successfully")
@@ -156,7 +157,9 @@ class WeatherPipeline:
         }
         return forecast
 
-    def _publish_salesforce(self, chart: dict, images: dict, forecast: dict) -> None:
+    def _publish_salesforce(
+        self, chart: dict, images: dict, forecast: dict
+    ) -> ReportUpsertResult:
         """
         Publish the forecast and images to Salesforce.
 
@@ -167,11 +170,8 @@ class WeatherPipeline:
             str: Salesforce record ID
         """
         sf = SFWeatherClient()
-        record_id = sf.upsert_report(chart["hash"])
-        # record_id = records[0]["Id"]
+        report = sf.upsert_report(chart["hash"], forecast["content"])
 
-        sf.ensure_preview_image(record_id, images["small"])
+        sf.ensure_preview_image(report.record_id, images["small"])
 
-        sf.update_forecast(record_id, forecast["content"])
-
-        return record_id
+        return report
