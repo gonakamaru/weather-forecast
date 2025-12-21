@@ -1,6 +1,13 @@
 import base64
 from os.path import basename, splitext
+from typing import NamedTuple
+
 from .base import SalesforceBaseClient
+
+
+class ReportUpsertResult(NamedTuple):
+    record_id: str
+    created: bool
 
 
 class SFWeatherClient(SalesforceBaseClient):
@@ -42,7 +49,36 @@ class SFWeatherClient(SalesforceBaseClient):
             # Re-query to return the new record
             records = self.query(query)
 
-        return records
+        return records[0]["Id"]
+
+    def upsert_report(self, pdf_hash: str) -> str:
+        """
+        Upserts Weather_Report__c by PDF hash.
+
+        Args:
+            pdf_hash: The hash of the PDF to search for.
+
+        Returns:
+            ReportUpsertResult: record ID and whether it was created.
+        """
+        if not pdf_hash:
+            raise ValueError("pdf_hash must not be empty")
+
+        escaped_hash = pdf_hash.replace("'", "\\'")
+
+        # Using External ID (PDF_Hash__c) to upsert
+        # Salesforce returns the ID and created status
+        result = self.upsert(
+            "Weather_Report__c",
+            external_id_field="PDF_Hash__c",
+            external_id_value=pdf_hash,
+            fields={
+                "Name": "DEV Weather Report",
+            },
+        )
+
+        # return ReportUpsertResult(record_id=result["id"], created=result["created"])
+        return result["id"]
 
     def ensure_preview_image(self, record_id: str, file_path: str) -> str | None:
         """

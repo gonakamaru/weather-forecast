@@ -167,8 +167,8 @@ class WeatherPipeline:
             str: Salesforce record ID
         """
         sf = SFWeatherClient()
-        records = sf.find_or_create_report(chart["hash"])
-        record_id = records[0]["Id"]
+        record_id = sf.upsert_report(chart["hash"])
+        # record_id = records[0]["Id"]
 
         sf.ensure_preview_image(record_id, images["small"])
 
