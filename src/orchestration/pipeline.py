@@ -59,7 +59,12 @@ class WeatherPipeline:
         forecast = self._generate_forecast(images)
 
         logger.info("Publishing results to Salesforce")
-        self._publish_salesforce(chart, images, forecast)
+        record_id = self._publish_salesforce(chart, images, forecast)
+
+        logger.info(
+            "Salesforce publish completed: record_id=%s",
+            record_id,
+        )
 
         logger.info("Pipeline run completed successfully")
         return True
@@ -158,6 +163,8 @@ class WeatherPipeline:
         Args:
             images (dict): Prepared images from _prepare_images()
             forecast (dict): Generated forecast from _generate_forecast()
+        Returns:
+            str: Salesforce record ID
         """
         sf = SFWeatherClient()
         records = sf.find_or_create_report(chart["hash"])
@@ -166,3 +173,5 @@ class WeatherPipeline:
         sf.ensure_preview_image(record_id, images["small"])
 
         sf.update_forecast(record_id, forecast["content"])
+
+        return record_id
