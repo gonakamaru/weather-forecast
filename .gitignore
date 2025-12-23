@@ -23,3 +23,5 @@ __pycache__/
 server.key
 server.crt
 
+# Salesforce cli files
+.sfdx/
