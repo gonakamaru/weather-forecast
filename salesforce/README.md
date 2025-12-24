@@ -52,8 +52,11 @@ Default configuration.
 - Field-Level Security
 - No custom security model defined yet
 
-### Deploy
+### Metadata IO
+
+Retrieve and Deploy using manifest
 
 ```text
-sf project retrieve start --metadata CustomObject:Weather_Report__c
+sf project retrieve start --manifest salesforce/manifest/package.xml
+sf project deploy start --manifest salesforce/manifest/package.xml
 ```

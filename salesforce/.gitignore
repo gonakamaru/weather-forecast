@@ -13,8 +13,4 @@ sfdx-config.json
 .vscode/
 .idea/
 
-# Retrieved but meaningless
-**/package.xml
-
-# Salesforce noize
 **/listViews/**
