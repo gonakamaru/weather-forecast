@@ -13,4 +13,5 @@ sfdx-config.json
 .vscode/
 .idea/
 
+# Retrievable but meaningless
 **/listViews/**
