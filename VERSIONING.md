@@ -17,3 +17,6 @@ This project uses **Semantic Versioning**:
 ## Tagging
 
 Tags are created from the `main` branch:
+
+    git tag -a vX.Y.Z -m "Release vX.Y.Z"
+    git push origin vX.Y.Z

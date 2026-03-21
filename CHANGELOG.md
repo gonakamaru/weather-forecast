@@ -5,15 +5,21 @@ All notable changes to this project will be documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 and the versioning uses [Semantic Versioning](https://semver.org/).
 
+## [v0.6.0] - Unreleased
+
+### Changed
+
+- Cleaned up and standardized markdown documentation
+
 ## [v0.5.0] - Unreleased
 
 ### Notes
 
-* Project paused. Planned features deferred.
-* Issues closed as part of project reset.
-* Development resumes under v0.6.
+- Project paused. Planned features deferred.
+- Issues closed as part of project reset.
+- Development resumes under v0.6.
 
-## [v0.4.0] - 2025-12-31
+## [v0.4.1] - 2026-01-01
 
 ### Added
 
@@ -30,8 +36,6 @@ and the versioning uses [Semantic Versioning](https://semver.org/).
 ### Deferred
 
 - Continuous Integration (CI) automation
-
----
 
 ## [v0.3.0] - 2025-12-24
 
@@ -53,9 +57,7 @@ and the versioning uses [Semantic Versioning](https://semver.org/).
 - No Flows or Process Builders
 - No Reports, Page Layouts, or FlexiPages customized
 
----
-
-## [v0.2.x] - 2025-12-21
+## [v0.2.4] - 2025-12-22
 
 ### Added
 
@@ -75,8 +77,6 @@ and the versioning uses [Semantic Versioning](https://semver.org/).
 - Missing weather images in Salesforce records
 - Script naming inconsistencies
 
----
-
 ## [v0.1.0] - 2025-12-11
 
 ### Added
@@ -86,5 +86,3 @@ and the versioning uses [Semantic Versioning](https://semver.org/).
 - Preview image generation
 - LLaVA-based forecast extraction
 - Salesforce upload (PDF-hash, PNG-preview, forecast text)
-
----
