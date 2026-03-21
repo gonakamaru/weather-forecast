@@ -127,10 +127,12 @@ is **intentionally deferred** and will be revisited once delivery practices are 
 
 ## 🔮 Next Steps
 
+- Move secrets out of `.env` and `.key` files into environment variables
+  so the Python side has no file dependencies for configuration
+- Make the shell scripts responsible for loading secrets into the environment
+- Work toward Docker-friendly deployment as the end goal
 - Add a pipeline orchestrator for cleaner flow control
 - Add a `SETUP.md` with detailed environment setup steps
-- Explore scheduled / automated ingestion
-- Evaluate CI options for v0.5
 
 ---
 
