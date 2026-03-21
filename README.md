@@ -67,11 +67,11 @@ orchestration design, and Salesforce REST integration.
 
    Then edit `.env` with your Salesforce credentials (see `.env.example` for OAuth2 and JWT options).
 
-4. Deploy to Salesforce -- switches to the latest tagged release and updates your Salesforce org.
+4. Deploy to Salesforce -- fetches the latest tag, checks it out, and pushes the metadata to the Salesforce org.
 
        source ./scripts/deploy_salesforce.sh
 
-5. Deploy Python -- switches to the latest tagged release and runs the pipeline.
+5. Deploy Python -- fetches the latest tag, checks it out, and runs the pipeline.
 
        source ./scripts/deploy_python.sh
 
