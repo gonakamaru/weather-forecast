@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 and the versioning uses [Semantic Versioning](https://semver.org/).
 
+## [v0.5.0] - Unreleased
+
+### Notes
+
+* Project paused. Planned features deferred.
+* Issues closed as part of project reset.
+* Development resumes under v0.6.
+
 ## [v0.4.0] - 2025-12-31
 
 ### Added
