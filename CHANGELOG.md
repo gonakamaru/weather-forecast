@@ -9,9 +9,9 @@ and the versioning uses [Semantic Versioning](https://semver.org/).
 
 ### Notes
 
-* Project paused. Planned features deferred.
-* Issues closed as part of project reset.
-* Development resumes under v0.6.
+- Project paused. Planned features deferred.
+- Issues closed as part of project reset.
+- Development resumes under v0.6.
 
 ## [v0.4.0] - 2025-12-31
 
