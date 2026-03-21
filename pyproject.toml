@@ -2,6 +2,7 @@
 name = "weather-forecast"
 version = "0.6.0"
 requires-python = ">=3.14"
+description = "A local-first PoC: JMA weather charts → LLaVA → Salesforce"
 
 [tool.pytest.ini_options]
 pythonpath = ["."]          # adds project root to Python path so imports work
