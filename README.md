@@ -24,7 +24,7 @@ and stores it in a Salesforce Developer Edition org:
 1. **Ingest** a JMA weather chart PDF
 2. **Convert** it to a standard PNG and a small preview image
 3. **Extract** a short forecast summary using LLaVA (runs locally)
-4. **Upload** everything to Salesforce — PDF hash, preview image, and forecast text
+4. **Upload** everything to Salesforce : PDF hash, preview image, and forecast text
 
 Small in scope, but it touches a real cross-section of skills:
 PDF tooling, image conversion, local LLM inference,
@@ -37,15 +37,14 @@ orchestration design, and Salesforce REST integration.
 | Item | Requirement |
 | --- | --- |
 | Hardware | Apple Silicon Mac (M1 or later) |
-| RAM | 8 GB minimum — 16 GB recommended |
+| RAM | 8 GB minimum |
 | macOS | Sequoia (26) or later |
 | Python | 3.14 or later |
 | Salesforce | Developer Edition org (free) |
 | Disk space | ~5–10 GB free (LLaVA model weights) |
 
-> **⚠️ Performance note:** M1 8 GB works but is slow —
-> expect a few minutes for LLaVA inference per chart.
-> M3 16 GB is the recommended target for comfortable use.
+> **⚠️ Performance note:** M1 8 GB works but is slow and
+> expect a few minutes for LLaVA inference.
 > This is intentional for a locally-run PoC.
 
 ---
@@ -122,7 +121,7 @@ Standardized deployment scripts are provided to keep releases repeatable and red
 
 ### Continuous Integration
 
-Automated CI — tests, merge validation, pipeline orchestration —
+Automated CI (tests, merge validation, pipeline orchestration) 
 is **intentionally deferred** and will be revisited once delivery practices are stabilized.
 
 ---
