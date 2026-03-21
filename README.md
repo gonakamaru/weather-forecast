@@ -37,7 +37,7 @@ orchestration design, and Salesforce REST integration.
 ## 💻 System Requirements
 
 | Item | Requirement |
-|---|---|
+| --- | --- |
 | Hardware | Apple Silicon Mac (M1 or later) |
 | RAM | 8 GB minimum — 16 GB recommended |
 | macOS | Ventura (13) or later |
@@ -93,7 +93,7 @@ orchestration design, and Salesforce REST integration.
 The end-to-end pipeline is working. Current version is **v0.4.0**.
 
 | Feature | Status |
-|---|---|
+| --- | --- |
 | PDF ingestion and PNG conversion | ✅ Done |
 | LLaVA-based forecast extraction (local) | ✅ Done |
 | Salesforce upload (hash, preview, forecast) | ✅ Done |
