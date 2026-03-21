@@ -92,7 +92,7 @@ orchestration design, and Salesforce REST integration.
 
 Built and tested on an M1 MacBook Air with 8 GB RAM. It runs. Slowly. But it runs. That's kind of the point.
 
-Current version is **v0.4.1**.
+Current MVP version is **v0.4.1**.
 
 | Feature | Status |
 | --- | --- |
@@ -118,7 +118,7 @@ This project uses a **manual Continuous Delivery** model.
 - Python and Salesforce deployments are handled independently
 - Each deployment targets an explicit Git tag (e.g. `v0.4.1`)
 - Environment setup (venv, Salesforce auth, secrets) is assumed complete before execution
-- CI tooling is intentionally out of scope for v0.4
+- CI tooling is intentionally out of scope for now
 
 Standardized deployment scripts are provided to keep releases repeatable and reduce operator error.
 
