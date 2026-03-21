@@ -1,8 +1,6 @@
-# 🌤️ Weather Chart → Forecast → Salesforce
+# 🌦️ Weather Chart → Forecast → Salesforce
 
-A local-first proof-of-concept that ingests JMA surface analysis PDFs,
-extracts a forecast using LLaVA, and stores the results in Salesforce —
-running entirely on your own Apple Silicon Mac. No cloud AI. No GPU rental.
+This is a personal PoC built to explore what a MacBook Air can actually do. It ingests a Japan Meteorological Agency (JMA) surface analysis PDF, runs it through LLaVA locally on Apple Silicon, and stores the results in Salesforce. No cloud AI, no GPU rental, no subscriptions. Just your Mac doing the work.
 
 ---
 
@@ -40,8 +38,8 @@ orchestration design, and Salesforce REST integration.
 | --- | --- |
 | Hardware | Apple Silicon Mac (M1 or later) |
 | RAM | 8 GB minimum — 16 GB recommended |
-| macOS | Ventura (13) or later |
-| Python | 3.10 or later |
+| macOS | Sequoia (26) or later |
+| Python | 3.14 or later |
 | Salesforce | Developer Edition org (free) |
 | Disk space | ~5–10 GB free (LLaVA model weights) |
 
@@ -90,7 +88,9 @@ orchestration design, and Salesforce REST integration.
 
 ## 📊 Project Status
 
-The end-to-end pipeline is working. Current version is **v0.4.0**.
+Built and tested on an M1 MacBook Air with 8 GB RAM. It runs. Slowly. But it runs. That's kind of the point.
+
+The end-to-end pipeline is working. Current version is **v0.4.1**.
 
 | Feature | Status |
 | --- | --- |
