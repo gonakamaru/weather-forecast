@@ -24,7 +24,7 @@ and stores it in a Salesforce Developer Edition org:
 1. **Ingest** a JMA weather chart PDF
 2. **Convert** it to a standard PNG and a small preview image
 3. **Extract** a short forecast summary using LLaVA (runs locally)
-4. **Upload** everything to Salesforce : PDF hash, preview image, and forecast text
+4. **Upload** everything to Salesforce: PDF hash, preview image, and forecast text
 
 Small in scope, but it touches a real cross-section of skills:
 PDF tooling, image conversion, local LLM inference,
@@ -38,14 +38,13 @@ orchestration design, and Salesforce REST integration.
 | --- | --- |
 | Hardware | Apple Silicon Mac (M1 or later) |
 | RAM | 8 GB minimum |
-| macOS | Sequoia (26) or later |
-| Python | 3.14 or later |
+| macOS | Sequoia (15) or later |
+| Python | 3.10 or later |
 | Salesforce | Developer Edition org (free) |
-| Disk space | ~5–10 GB free (LLaVA model weights) |
+| Disk space | ~5-10 GB free (LLaVA model weights) |
 
-> **⚠️ Performance note:** M1 8 GB works but is slow and
-> expect a few minutes for LLaVA inference.
-> This is intentional for a locally-run PoC.
+> **Note:** M1 with 8 GB works, but LLaVA inference takes a few minutes per chart.
+> Slow is fine. This is a PoC, not a production system.
 
 ---
 
@@ -89,7 +88,7 @@ orchestration design, and Salesforce REST integration.
 
 Built and tested on an M1 MacBook Air with 8 GB RAM. It runs. Slowly. But it runs. That's kind of the point.
 
-The end-to-end pipeline is working. Current version is **v0.4.1**.
+Current version is **v0.4.1**.
 
 | Feature | Status |
 | --- | --- |
@@ -113,7 +112,7 @@ This project uses a **manual Continuous Delivery** model.
 
 - Deployment is triggered by a human operator
 - Python and Salesforce deployments are handled independently
-- Each deployment targets an explicit Git tag (e.g. `v0.4.0`)
+- Each deployment targets an explicit Git tag (e.g. `v0.4.1`)
 - Environment setup (venv, Salesforce auth, secrets) is assumed complete before execution
 - CI tooling is intentionally out of scope for v0.4
 
@@ -121,7 +120,7 @@ Standardized deployment scripts are provided to keep releases repeatable and red
 
 ### Continuous Integration
 
-Automated CI (tests, merge validation, pipeline orchestration) 
+Automated CI (tests, merge validation, pipeline orchestration)
 is **intentionally deferred** and will be revisited once delivery practices are stabilized.
 
 ---
