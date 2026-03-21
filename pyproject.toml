@@ -1,7 +1,11 @@
-[tool.pytest.ini_options]
-pythonpath = ["."]
-testpaths = ["tests"]
-python_files = "test_*.py"
-python_functions = "test_*"
-addopts = "-ra -q"
+[project]
+name = "weather-forecast"
+version = "0.6.0"
+requires-python = ">=3.14"
 
+[tool.pytest.ini_options]
+pythonpath = ["."]          # adds project root to Python path so imports work
+testpaths = ["tests"]       # tells pytest where to look for tests
+python_files = "test_*.py"  # which files are test files
+python_functions = "test_*" # which functions are test functions
+addopts = "-ra -q"          # default flags: show extra summary, quiet output
