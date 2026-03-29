@@ -83,6 +83,21 @@ Install Python 3.14:
     pyenv install 3.14.3
     pyenv global 3.14.3
 
+Create or add to `~/.zshrc`:
+
+```bash
+# Initialize pyenv so this shell uses Python versions managed by pyenv
+export PYENV_ROOT="$HOME/.pyenv"
+export PATH="$PYENV_ROOT/shims:$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init -)"
+```
+
+Reload Shell:
+
+```bash
+source ~/.zshrc
+```
+
 Verify:
 
     python --version
