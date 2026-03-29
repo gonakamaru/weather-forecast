@@ -53,28 +53,14 @@ Then install the required packages:
 
     brew install git pyenv poppler node
 
-`poppler` is required by `pdf2image` for PDF rendering.
 `pyenv` manages your Python version.
+`poppler` is required by `pdf2image` for PDF rendering.
 `node` is required for the Salesforce CLI.
 
-## 2. Node and Salesforce CLI
+## 2. Clone the Repo
 
-> **Note:** Salesforce CLI is distributed via npm only.
-> Do not install it via Homebrew.
-
-Install the Salesforce CLI via npm:
-
-    npm install -g @salesforce/cli
-
-Verify it works:
-
-    sf --version
-
-You should see something like `@salesforce/cli/2.x.x darwin-arm64 node-vXX.x.x`.
-
-Then authenticate to your Salesforce Developer Edition org:
-
-    sf org login web --alias my-org
+    git clone https://github.com/gonakamaru/weather-forecast.git
+    cd weather-forecast
 
 ## 3. Python via pyenv
 
@@ -102,12 +88,7 @@ Verify:
 
     python --version
 
-## 4. Clone the Repo
-
-    git clone https://github.com/gonakamaru/weather-forecast.git
-    cd weather-forecast
-
-## 5. Python Environment
+## 4. Python Environment
 
     python -m venv venv
     source venv/bin/activate
@@ -121,6 +102,25 @@ Confirm PyTorch can see your Apple Silicon GPU:
 
 This should print `True`. The pipeline detects MPS automatically at runtime
 and falls back to CPU if unavailable.
+
+## 5. Node and Salesforce CLI
+
+> **Note:** Salesforce CLI is distributed via npm only.
+> Do not install it via Homebrew.
+
+Install the Salesforce CLI via npm:
+
+    npm install -g @salesforce/cli
+
+Verify it works:
+
+    sf --version
+
+You should see something like `@salesforce/cli/2.x.x darwin-arm64 node-vXX.x.x`.
+
+Then authenticate to your Salesforce Developer Edition org:
+
+    sf org login web --alias my-weather-forecast-de-org
 
 ## 6. Salesforce Credentials
 
