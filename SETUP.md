@@ -1,22 +1,21 @@
-# 🛠 Setup Guide
+# Setup Guide
 
 This guide walks you through everything you need to get the project running on your Mac.
-If you just want the quick version, see the [Quick Start](#-quick-start) section.
 
-## 📋 Table of Contents
+## Table of Contents
 
-- [System Requirements](#-system-requirements)
-- [Platform](#-platform)
+- [System Requirements](#system-requirements)
+- [Platform](#platform)
 - [1. Homebrew Dependencies](#1-homebrew-dependencies)
 - [2. Clone the Repo](#2-clone-the-repo)
 - [3. Python via pyenv](#3-python-via-pyenv)
 - [4. Python Environment](#4-python-environment)
 - [5. Hugging Face and LLaVA Model](#5-hugging-face-and-llava-model)
 - [6. Node and Salesforce CLI](#6-node-and-salesforce-cli)
-- [7. Salesforce Credentials](#7-salesforce-credentials)
+- [7. Salesforce Custom Object](#7-salesforce-custom-object)
 - [8. Run AI Weather Forecast](#8-run-ai-weather-forecast)
 
-## 💻 System Requirements
+## System Requirements
 
 | Item | Requirement |
 | --- | --- |
@@ -31,7 +30,7 @@ If you just want the quick version, see the [Quick Start](#-quick-start) section
 > **Note:** M1 with 8 GB works, but LLaVA inference takes a few minutes per chart.
 > Slow is fine. This is a PoC, not a production system.
 
-## 🖥 Platform
+## Platform
 
 | Component | Details |
 | --- | --- |
@@ -47,11 +46,15 @@ If you just want the quick version, see the [Quick Start](#-quick-start) section
 
 If you don't have Homebrew installed:
 
-    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```bash
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```
 
 Then install the required packages:
 
-    brew install git pyenv poppler node
+```bash
+brew install git pyenv poppler node
+```
 
 `pyenv` manages your Python version.
 `poppler` is required by `pdf2image` for PDF rendering.
@@ -59,20 +62,24 @@ Then install the required packages:
 
 ## 2. Clone the Repo
 
-    git clone https://github.com/gonakamaru/weather-forecast.git
-    
-    # Go to the project directory
-    cd weather-forecast
+```bash
+git clone https://github.com/gonakamaru/weather-forecast.git
 
-    # Copy .env for the project settings and secrets (OAuth2 and JWT options)
-    cp .env.example .env
+# Go to the project directory
+cd weather-forecast
+
+# Copy .env for the project settings and secrets (OAuth2 and JWT options)
+cp .env.example .env
+```
 
 ## 3. Python via pyenv
 
 Install Python 3.14:
 
-    pyenv install 3.14.3
-    pyenv global 3.14.3
+```bash
+pyenv install 3.14.3
+pyenv global 3.14.3
+```
 
 Create or add to `~/.zshrc`:
 
@@ -83,7 +90,7 @@ export PATH="$PYENV_ROOT/shims:$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init -)"
 ```
 
-Reload Shell:
+Reload shell:
 
 ```bash
 source ~/.zshrc
@@ -91,19 +98,25 @@ source ~/.zshrc
 
 Verify:
 
-    python --version
+```bash
+python --version
+```
 
 ## 4. Python Environment
 
-    python -m venv venv
-    source venv/bin/activate
-    pip install -r requirements.txt
+```bash
+python -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+```
 
 ### Verify Apple Silicon AI Support
 
 Confirm PyTorch can see your Apple Silicon GPU:
 
-    python -c "import torch; print(torch.backends.mps.is_available())"
+```bash
+python -c "import torch; print(torch.backends.mps.is_available())"
+```
 
 This should print `True`. The pipeline detects MPS automatically at runtime
 and falls back to CPU if unavailable.
@@ -111,27 +124,30 @@ and falls back to CPU if unavailable.
 ## 5. Hugging Face and LLaVA Model
 
 This project uses **LLaVA Interleave Qwen 0.5B** running locally via Hugging Face.
+It's publicly available, so you don't need a Hugging Face account or authentication
+token to use it.
 
-This model is publicly available and does not require a Hugging Face account
-or authentication token.
+Run the following to download the model:
 
-    python -c "
-    from transformers import AutoProcessor, AutoModelForImageTextToText
-    model_id = 'llava-hf/llava-interleave-qwen-0.5b-hf'
-    AutoProcessor.from_pretrained(model_id)
-    AutoModelForImageTextToText.from_pretrained(model_id)
-    print('Model downloaded successfully.')
-    "
+```bash
+python -c "
+from transformers import AutoProcessor, AutoModelForImageTextToText
+model_id = 'llava-hf/llava-interleave-qwen-0.5b-hf'
+AutoProcessor.from_pretrained(model_id)
+AutoModelForImageTextToText.from_pretrained(model_id)
+print('Model downloaded successfully.')
+"
+```
 
-Model weights (~1.8 GB) are downloaded automatically on first run and cached at:
+The model weights (~1.8 GB) are downloaded automatically on first run and cached at:
 
-    ~/.cache/huggingface/hub/models--llava-hf--llava-interleave-qwen-0.5b-hf
+```bash
+~/.cache/huggingface/hub/models--llava-hf--llava-interleave-qwen-0.5b-hf
+```
 
-The cache is shared across all projects on your machine, so the download
-only happens once.
-
-Make sure you have a stable internet connection and enough disk space
-before running the pipeline for the first time.
+Since the cache is shared across all projects on your machine, you only need to do this
+once. Make sure you have a stable internet connection and enough disk space before you
+start.
 
 ## 6. Node and Salesforce CLI
 
@@ -140,37 +156,46 @@ before running the pipeline for the first time.
 
 Install the Salesforce CLI via npm:
 
-    npm install -g @salesforce/cli
+```bash
+npm install -g @salesforce/cli
+```
 
 Verify it works:
 
-    sf --version
+```bash
+sf --version
+```
 
 You should see something like `@salesforce/cli/2.x.x darwin-arm64 node-vXX.x.x`.
 
 Then authenticate to your Salesforce Developer Edition org:
 
-    sf org login web --alias my-weather-forecast-de-org
+```bash
+sf org login web --alias my-weather-forecast-de-org
+```
 
 ## 7. Salesforce Custom Object
 
 Deploy to Salesforce -- fetches the latest tag, checks it out, and pushes
-the metadata to the Salesforce org createing the `Weather_Report__c` custom 
+the metadata to the Salesforce org, creating the `Weather_Report__c` custom
 object and its fields in the org:
 
-    source ./scripts/deploy_salesforce.sh
+```bash
+source ./scripts/deploy_salesforce.sh
+```
 
 | Field | Type | Description |
 | --- | --- | --- |
 | `Forecast__c` | Long Text Area | AI-generated forecast text |
-| `Chart_Image_Id__c` | Text | ⚠️ Deprecated |
+| `Chart_Image_Id__c` | Text | Deprecated (retained for reference only) |
 | `PDF_Hash__c` | Text | PDF hash for deduplication |
 | `PDF_Hash_4_4__c` | Text | Short hash variant for deduplication |
 | `Import_Timestamp__c` | Date/Time | When the record was imported |
 
 ## 8. Run AI Weather Forecast
 
-Deploy Python -- fetches the latest tag, checks it out, and runs the pipeline.
+Deploy Python -- fetches the latest tag, checks it out, and runs the pipeline:
 
-    source ./scripts/deploy_python.sh
-
+```bash
+source ./scripts/deploy_python.sh
+```
