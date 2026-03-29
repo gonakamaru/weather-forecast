@@ -10,14 +10,15 @@ and the versioning uses [Semantic Versioning](https://semver.org/).
 ### Changed
 
 - Cleaned up and standardized markdown documentation
+- Updated example and metadata files
 
 ## [v0.5.0] - Unreleased
 
 ### Notes
 
-- Project paused. Planned features deferred.
-- Issues closed as part of project reset.
-- Development resumes under v0.6.
+- Project paused. Planned features deferred
+- Issues closed as part of project reset
+- Development resumes under v0.6
 
 ## [v0.4.1] - 2026-01-01
 
