@@ -11,9 +11,9 @@ If you just want the quick version, see the [Quick Start](#-quick-start) section
 - [2. Clone the Repo](#2-clone-the-repo)
 - [3. Python via pyenv](#3-python-via-pyenv)
 - [4. Python Environment](#4-python-environment)
-- [5. Node and Salesforce CLI](#5-node-and-salesforce-cli)
-- [6. Salesforce Credentials](#6-salesforce-credentials)
-- [7. Hugging Face and LLaVA Model](#7-hugging-face-and-llava-model)
+- [5. Hugging Face and LLaVA Model](#5-hugging-face-and-llava-model)
+- [6. Node and Salesforce CLI](#6-node-and-salesforce-cli)
+- [7. Salesforce Credentials](#7-salesforce-credentials)
 - [Quick Start](#-quick-start)
 
 ## 💻 System Requirements
@@ -103,7 +103,32 @@ Confirm PyTorch can see your Apple Silicon GPU:
 This should print `True`. The pipeline detects MPS automatically at runtime
 and falls back to CPU if unavailable.
 
-## 5. Node and Salesforce CLI
+## 5. Hugging Face and LLaVA Model
+
+This project uses **LLaVA Interleave Qwen 0.5B** running locally via Hugging Face.
+
+This model is publicly available and does not require a Hugging Face account
+or authentication token.
+
+    python -c "
+    from transformers import AutoProcessor, AutoModelForImageTextToText
+    model_id = 'llava-hf/llava-interleave-qwen-0.5b-hf'
+    AutoProcessor.from_pretrained(model_id)
+    AutoModelForImageTextToText.from_pretrained(model_id)
+    print('Model downloaded successfully.')
+    "
+
+Model weights (~1.8 GB) are downloaded automatically on first run and cached at:
+
+    ~/.cache/huggingface/hub/models--llava-hf--llava-interleave-qwen-0.5b-hf
+
+The cache is shared across all projects on your machine, so the download
+only happens once.
+
+Make sure you have a stable internet connection and enough disk space
+before running the pipeline for the first time.
+
+## 6. Node and Salesforce CLI
 
 > **Note:** Salesforce CLI is distributed via npm only.
 > Do not install it via Homebrew.
@@ -122,7 +147,7 @@ Then authenticate to your Salesforce Developer Edition org:
 
     sf org login web --alias my-weather-forecast-de-org
 
-## 6. Salesforce Credentials
+## 7. Salesforce Credentials
 
     cp .env.example .env
 
@@ -142,23 +167,6 @@ See `.env.example` for OAuth2 and JWT options.
 > | `Import_Timestamp__c` | Date/Time | When the record was imported |
 >
 > The Python pipeline will fail if this object does not exist in your org.
-
-## 7. Hugging Face and LLaVA Model
-
-This project uses **LLaVA Interleave Qwen 0.5B** running locally via Hugging Face.
-
-This model is publicly available and does not require a Hugging Face account
-or authentication token.
-
-Model weights (~1.8 GB) are downloaded automatically on first run and cached at:
-
-    ~/.cache/huggingface/hub/models--llava-hf--llava-interleave-qwen-0.5b-hf
-
-The cache is shared across all projects on your machine, so the download
-only happens once.
-
-Make sure you have a stable internet connection and enough disk space
-before running the pipeline for the first time.
 
 ## 🚀 Quick Start
 
