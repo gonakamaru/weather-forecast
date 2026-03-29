@@ -14,7 +14,7 @@ If you just want the quick version, see the [Quick Start](#-quick-start) section
 - [5. Hugging Face and LLaVA Model](#5-hugging-face-and-llava-model)
 - [6. Node and Salesforce CLI](#6-node-and-salesforce-cli)
 - [7. Salesforce Credentials](#7-salesforce-credentials)
-- [Quick Start](#-quick-start)
+- [8. Run AI Weather Forecast](#8-run-ai-weather-forecast)
 
 ## 💻 System Requirements
 
@@ -60,7 +60,12 @@ Then install the required packages:
 ## 2. Clone the Repo
 
     git clone https://github.com/gonakamaru/weather-forecast.git
+    
+    # Go to the project directory
     cd weather-forecast
+
+    # Copy .env for the project settings and secrets (OAuth2 and JWT options)
+    cp .env.example .env
 
 ## 3. Python via pyenv
 
@@ -147,36 +152,25 @@ Then authenticate to your Salesforce Developer Edition org:
 
     sf org login web --alias my-weather-forecast-de-org
 
-## 7. Salesforce Credentials
-
-    cp .env.example .env
-
-Then edit `.env` with your Salesforce credentials.
-See `.env.example` for OAuth2 and JWT options.
-
-> **Note:** Before running the Python pipeline for the first time, run the
-> Salesforce deployment script below. This creates the `Weather_Report__c`
-> custom object and its fields in your org:
->
-> | Field | Type | Description |
-> | --- | --- | --- |
-> | `Forecast__c` | Long Text Area | AI-generated forecast text |
-> | `Chart_Image_Id__c` | Text | ⚠️ Deprecated |
-> | `PDF_Hash__c` | Text | PDF hash for deduplication |
-> | `PDF_Hash_4_4__c` | Text | Short hash variant for deduplication |
-> | `Import_Timestamp__c` | Date/Time | When the record was imported |
->
-> The Python pipeline will fail if this object does not exist in your org.
-
-## 🚀 Quick Start
-
-Once setup is complete, deployment is two commands.
+## 7. Salesforce Custom Object
 
 Deploy to Salesforce -- fetches the latest tag, checks it out, and pushes
-the metadata to the Salesforce org.
+the metadata to the Salesforce org createing the `Weather_Report__c` custom 
+object and its fields in the org:
 
     source ./scripts/deploy_salesforce.sh
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `Forecast__c` | Long Text Area | AI-generated forecast text |
+| `Chart_Image_Id__c` | Text | ⚠️ Deprecated |
+| `PDF_Hash__c` | Text | PDF hash for deduplication |
+| `PDF_Hash_4_4__c` | Text | Short hash variant for deduplication |
+| `Import_Timestamp__c` | Date/Time | When the record was imported |
+
+## 8. Run AI Weather Forecast
 
 Deploy Python -- fetches the latest tag, checks it out, and runs the pipeline.
 
     source ./scripts/deploy_python.sh
+
