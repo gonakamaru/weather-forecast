@@ -3,6 +3,11 @@ set -euo pipefail
 
 echo "=== Salesforce CD ==="
 
+echo ""
+which sf
+sf version
+echo ""
+
 git fetch --tags
 LATEST_TAG=$(git describe --tags --abbrev=0)
 
