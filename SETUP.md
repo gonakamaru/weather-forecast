@@ -11,9 +11,10 @@ This guide walks you through everything you need to get the project running on y
 - [3. Python via pyenv](#3-python-via-pyenv)
 - [4. Python Environment](#4-python-environment)
 - [5. Hugging Face and LLaVA Model](#5-hugging-face-and-llava-model)
-- [6. Node and Salesforce CLI](#6-node-and-salesforce-cli)
+- [6. Salesforce CLI and npm](#6-salesforce-cli-and-npm)
 - [7. Salesforce Custom Object](#7-salesforce-custom-object)
 - [8. Run AI Weather Forecast](#8-run-ai-weather-forecast)
+- [9. Verify in Salesforce](#9-verify-in-salesforce)
 
 ## System Requirements
 
@@ -149,36 +150,46 @@ Since the cache is shared across all projects on your machine, you only need to 
 once. Make sure you have a stable internet connection and enough disk space before you
 start.
 
-## 6. Node and Salesforce CLI
+## 6. Salesforce CLI and npm
 
 > **Note:** Salesforce CLI is distributed via npm only.
 > Do not install it via Homebrew.
 
-Install the Salesforce CLI via npm:
+Install the Salesforce CLI via npm and verify:
 
 ```bash
 npm install -g @salesforce/cli
-```
 
-Verify it works:
-
-```bash
 sf --version
 ```
 
 You should see something like `@salesforce/cli/2.x.x darwin-arm64 node-vXX.x.x`.
 
-Then authenticate to your Salesforce Developer Edition org:
+Then authenticate to your Salesforce Developer Edition org and check if it is properly authenticated.
+Make sure to use `--alias my-weather-forecast-de-org`; this alias is used in the deploy script in the next step.
 
 ```bash
 sf org login web --alias my-weather-forecast-de-org
+
+sf list org
+```
+
+```text
+┌──┬────────────────────────────┬─────────────────────────┬────────────────────┬───────────┐
+│  │ Alias                      │ Username                │ Org Id             │ Status    │
+├──┼────────────────────────────┼─────────────────────────┼────────────────────┼───────────┤
+│  │ my-weather-forecast-de-org │ go-nakamaru@example.com │ 00DgK0000000000000 │ Connected │
+└──┴────────────────────────────┴─────────────────────────┴────────────────────┴───────────┘
 ```
 
 ## 7. Salesforce Custom Object
 
-Deploy to Salesforce -- fetches the latest tag, checks it out, and pushes
-the metadata to the Salesforce org, creating the `Weather_Report__c` custom
-object and its fields in the org:
+Run the Salesforce deploy script `deploy_salesforce.sh` against the `my-weather-forecast-de-org` org.
+
+1. Fetches the latest Git tag
+2. Checks out the commit at that tag
+3. Deploys the metadata to the Salesforce org (`my-weather-forecast-de-org`)
+4. Creates the Weather_Report__c custom object and its fields in the org
 
 ```bash
 source ./scripts/deploy_salesforce.sh
@@ -194,8 +205,15 @@ source ./scripts/deploy_salesforce.sh
 
 ## 8. Run AI Weather Forecast
 
-Deploy Python -- fetches the latest tag, checks it out, and runs the pipeline:
+Deploy Python -- fetches the latest tag, checks it out, and runs the AI Weather Forecast pipeline:
 
 ```bash
 source ./scripts/deploy_python.sh
 ```
+
+## 9. Verify in Salesforce
+
+Log in to your Developer Edition org and confirm:
+
+- The Weather_Report__c object exists under Setup > Object Manager
+- At least one record has been created with a forecast in the Forecast__c field

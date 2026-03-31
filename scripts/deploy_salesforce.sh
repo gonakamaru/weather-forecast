@@ -10,6 +10,8 @@ echo "Deploying Salesforce metadata for $LATEST_TAG"
 
 git switch --detach "$LATEST_TAG"
 
-sf project deploy start --manifest salesforce/manifest/package.xml
+sf project deploy start \
+    --manifest salesforce/manifest/package.xml \
+    --target-org=my-weather-forecast-de-org
 
 echo "Salesforce deployment completed for $LATEST_TAG"
