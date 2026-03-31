@@ -3,6 +3,11 @@ set -euo pipefail
 
 echo "=== Python CD ==="
 
+echo ""
+which python
+python --version
+echo ""
+
 git fetch --tags
 LATEST_TAG=$(git describe --tags --abbrev=0)
 
