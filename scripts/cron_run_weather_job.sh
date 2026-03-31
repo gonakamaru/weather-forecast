@@ -18,6 +18,7 @@ GIT_BRANCH="$(git branch --show-current 2>/dev/null || echo 'detached')"
 
 {
   echo "=== Run started at $(date) ==="
+  python --version
   echo "Git: commit=$GIT_COMMIT tag=$GIT_TAG branch=$GIT_BRANCH"
   python -m src.main --run
   echo "=== Run ended at $(date) ==="
