@@ -2,6 +2,7 @@
 
 # Delete files according to the IDs in the file.
 
+# Strict mode: exit on error, unset variable, or pipe failure.
 set -euo pipefail
 
 # --- Paths ---

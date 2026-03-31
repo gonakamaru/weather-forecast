@@ -2,6 +2,7 @@
 
 # Select IDs of old files and assign them to a file.
 
+# Strict mode: exit on error, unset variable, or pipe failure.
 set -euo pipefail
 
 # --- Paths ---

@@ -5,6 +5,7 @@
 # -o pipefail -- if any command in a pipe fails, the whole pipe fails (without this, only the last command's exit code matters)
 set -euo pipefail
 
+# --- Paths ---
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 
 bash "$SCRIPT_DIR/01_query_old_files.sh"
