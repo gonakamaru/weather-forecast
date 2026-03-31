@@ -7,6 +7,6 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 
-bash "$SCRIPT_DIR/01_query_old_files.sh" && \
-bash "$SCRIPT_DIR/02_delete_bulk.sh" && \
+bash "$SCRIPT_DIR/01_query_old_files.sh"
+bash "$SCRIPT_DIR/02_delete_bulk.sh"
 bash "$SCRIPT_DIR/03_empty_recycle_bin.sh"
