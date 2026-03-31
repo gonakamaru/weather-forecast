@@ -8,6 +8,6 @@ set -euo pipefail
 # --- Paths ---
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 
-bash "$SCRIPT_DIR/01_query_old_files.sh"
-bash "$SCRIPT_DIR/02_delete_bulk.sh"
-bash "$SCRIPT_DIR/03_empty_recycle_bin.sh"
+bash "$SCRIPT_DIR/select.sh"
+bash "$SCRIPT_DIR/delete.sh"
+bash "$SCRIPT_DIR/flush.sh"
