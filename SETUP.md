@@ -15,7 +15,8 @@ This guide walks you through everything you need to get the project running on y
 - [7. Salesforce Custom Object](#7-salesforce-custom-object)
 - [8. Run AI Weather Forecast](#8-run-ai-weather-forecast)
 - [9. Verify in Salesforce](#9-verify-in-salesforce)
-- [10. Dev Org Storage Cleanup](#10-dev-org-storage-cleanup)
+- [10. Schedule the Weather Job](#10-schedule-the-weather-job)
+- [11. Dev Org Storage Cleanup](#11-dev-org-storage-cleanup)
 
 ## System Requirements
 
@@ -219,7 +220,21 @@ Log in to your Developer Edition org and confirm:
 - The Weather_Report__c object exists under Setup > Object Manager
 - At least one record has been created with a forecast in the Forecast__c field
 
-## 10. Dev Org Storage Cleanup
+## 10. Schedule the Weather Job
+
+The weather pipeline runs on a cron job. Add the following entry to your crontab with `crontab -e`:
+
+```bash
+47 * * * * env -i bash /full/path/to/scripts/cron_run_weather_job.sh
+```
+
+Replace `/full/path/to/` with your actual project path.
+The job runs at 47 minutes past every hour and logs output to `logs/hourly.log`.
+
+> **Note:** `env -i` starts the job with a clean environment. The script sets its own
+> `PATH` and activates the Python virtual environment internally.
+
+## 11. Dev Org Storage Cleanup
 
 Developer Edition orgs come with very limited file storage -- around 20 MB. The weather chart
 pipeline uploads a small thumbnail image (~100 KB JPG) on every run, so it fills up faster
