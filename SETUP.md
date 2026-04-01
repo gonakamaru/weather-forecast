@@ -15,6 +15,7 @@ This guide walks you through everything you need to get the project running on y
 - [7. Salesforce Custom Object](#7-salesforce-custom-object)
 - [8. Run AI Weather Forecast](#8-run-ai-weather-forecast)
 - [9. Verify in Salesforce](#9-verify-in-salesforce)
+- [10. Dev Org Storage Cleanup](#10-dev-org-storage-cleanup)
 
 ## System Requirements
 
@@ -217,3 +218,21 @@ Log in to your Developer Edition org and confirm:
 
 - The Weather_Report__c object exists under Setup > Object Manager
 - At least one record has been created with a forecast in the Forecast__c field
+
+## 10. Dev Org Storage Cleanup
+
+Developer Edition orgs come with very limited file storage -- around 20 MB. The weather chart
+pipeline uploads a small thumbnail image (~100 KB JPG) on every run, so it fills up faster
+than you'd expect.
+
+A set of cleanup scripts is provided under `scripts/cleanup/` to hard delete old ContentDocument
+records. Hard delete bypasses the Recycle Bin, so storage is freed immediately.
+
+> **Note:** The acting user must have the **Bulk API Hard Delete** permission set assigned
+> in Salesforce before running these scripts.
+
+To run manually:
+
+```bash
+bash scripts/cleanup/run_all.sh
+```

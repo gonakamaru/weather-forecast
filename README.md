@@ -53,6 +53,7 @@ Current MVP version is **v0.4.1**.
 | Unit tests for forecast and Salesforce client | ✅ Done |
 | Versioned Salesforce metadata | ✅ Done |
 | Standardized deployment scripts | ✅ Done |
+| Dev Org storage cleanup scripts | ✅ Done |
 | CI automation | ⏳ Deferred |
 
 ## 📦 Delivery & Deployment
