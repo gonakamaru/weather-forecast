@@ -16,7 +16,10 @@ TARGET_ORG="${TARGET_ORG:-my-weather-forecast-de-org}"
 # --- Derived ---
 DELETE_CANDIDATE_FILE="$DATA_DIR/old_files.csv"
 
+# --hard-delete
+# Deletes files permanently. Requires 'Bulk API Hard Delete' permission in your profile.
 sf data delete bulk \
   --sobject ContentDocument \
   --target-org "$TARGET_ORG" \
-  --file "$DELETE_CANDIDATE_FILE"
+  --file "$DELETE_CANDIDATE_FILE" \
+  --hard-delete

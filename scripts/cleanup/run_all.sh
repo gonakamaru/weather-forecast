@@ -10,4 +10,3 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 
 bash "$SCRIPT_DIR/select.sh"
 bash "$SCRIPT_DIR/delete.sh"
-bash "$SCRIPT_DIR/flush.sh"
