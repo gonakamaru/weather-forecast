@@ -15,6 +15,7 @@ This guide walks you through everything you need to get the project running on y
 - [7. Salesforce Custom Object](#7-salesforce-custom-object)
 - [8. Run AI Weather Forecast](#8-run-ai-weather-forecast)
 - [9. Verify in Salesforce](#9-verify-in-salesforce)
+- [10. Dev Org Storage Cleanup](#10-dev-org-storage-cleanup)
 
 ## System Requirements
 
@@ -192,7 +193,7 @@ Run the Salesforce deploy script `deploy_salesforce.sh` against the `my-weather-
 4. Creates the Weather_Report__c custom object and its fields in the org
 
 ```bash
-source ./scripts/deploy_salesforce.sh
+bash ./scripts/deploy_salesforce.sh
 ```
 
 | Field | Type | Description |
@@ -208,7 +209,7 @@ source ./scripts/deploy_salesforce.sh
 Deploy Python -- fetches the latest tag, checks it out, and runs the AI Weather Forecast pipeline:
 
 ```bash
-source ./scripts/deploy_python.sh
+bash ./scripts/deploy_python.sh
 ```
 
 ## 9. Verify in Salesforce
@@ -217,3 +218,16 @@ Log in to your Developer Edition org and confirm:
 
 - The Weather_Report__c object exists under Setup > Object Manager
 - At least one record has been created with a forecast in the Forecast__c field
+
+## 10. Dev Org Storage Cleanup
+
+Developer Edition orgs come with a very limited file storage -- around 20 MB. The weather
+chart pipeline uploads a small thumbnail image (100KB JPG) on every run, so it does fill up.
+A set of cleanup scripts is provided under `scripts/cleanup/` to delete old files and empty
+the Recycle Bin. Storage is not freed until the Recycle Bin is emptied.
+
+To run manually:
+
+```bash
+bash scripts/cleanup/run_all.sh
+```
