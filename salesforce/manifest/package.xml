@@ -4,5 +4,9 @@
     <members>Weather_Report__c</members>
     <name>CustomObject</name>
   </types>
+  <types>
+      <members>Bulk_API_Hard_Delete</members>
+      <name>PermissionSet</name>
+  </types>
   <version>65.0</version>
 </Package>
