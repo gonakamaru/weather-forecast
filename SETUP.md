@@ -221,10 +221,15 @@ Log in to your Developer Edition org and confirm:
 
 ## 10. Dev Org Storage Cleanup
 
-Developer Edition orgs come with a very limited file storage -- around 20 MB. The weather
-chart pipeline uploads a small thumbnail image (100KB JPG) on every run, so it does fill up.
-A set of cleanup scripts is provided under `scripts/cleanup/` to delete old files and empty
-the Recycle Bin. Storage is not freed until the Recycle Bin is emptied.
+Developer Edition orgs come with very limited file storage -- around 20 MB. The weather chart
+pipeline uploads a small thumbnail image (~100 KB JPG) on every run, so it fills up faster
+than you'd expect.
+
+A set of cleanup scripts is provided under `scripts/cleanup/` to hard delete old ContentDocument
+records. Hard delete bypasses the Recycle Bin, so storage is freed immediately.
+
+> **Note:** The acting user must have the **Bulk API Hard Delete** permission set assigned
+> in Salesforce before running these scripts.
 
 To run manually:
 
