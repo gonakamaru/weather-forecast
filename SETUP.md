@@ -193,7 +193,7 @@ Run the Salesforce deploy script `deploy_salesforce.sh` against the `my-weather-
 4. Creates the Weather_Report__c custom object and its fields in the org
 
 ```bash
-source ./scripts/deploy_salesforce.sh
+bash ./scripts/deploy_salesforce.sh
 ```
 
 | Field | Type | Description |
@@ -209,7 +209,7 @@ source ./scripts/deploy_salesforce.sh
 Deploy Python -- fetches the latest tag, checks it out, and runs the AI Weather Forecast pipeline:
 
 ```bash
-source ./scripts/deploy_python.sh
+bash ./scripts/deploy_python.sh
 ```
 
 ## 9. Verify in Salesforce
